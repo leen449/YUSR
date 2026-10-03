@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Try YUSR | يسر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=EB+Garamond:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#d9d9d6; --raised:#ffffff; --ink:#1c2016; --ink-soft:#4e5248; --ink-muted:#7d8077;
+  --olive:#8f9c75; --olive-deep:#4a5d14; --olive-deep-hover:#3b4a0e; --on-olive:#ffffff;
+  --brand:#1f5747; --rule:#d4d4cf; --track:#cfd0d6; --soft:#f1f1ee; --pill:#ececea;
+  --bad:#ef5b5b; --mid:#8f9c75; --dark:#4b5640; --warn:#a8794a; --warn-bg:#f6ecdf; --check:#2a2f5c;
+  --serif:"EB Garamond", Garamond, "Times New Roman", serif;
+  --sans:"DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1e19; --raised:#272a23; --ink:#ecede6; --ink-soft:#c4c7bc; --ink-muted:#9a9d92;
+    --olive:#66724f; --olive-deep:#5a7019; --olive-deep-hover:#6a8220;
+    --brand:#8fc4b0; --rule:#3a3d35; --track:#3d4038; --soft:#30332b; --pill:#2b2e27;
+    --bad:#e86a6a; --mid:#7f8d63; --dark:#a3b08c; --warn:#e0b07c; --warn-bg:#3b3226; --check:#aab0e8;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1e19; --raised:#272a23; --ink:#ecede6; --ink-soft:#c4c7bc; --ink-muted:#9a9d92;
+  --olive:#66724f; --olive-deep:#5a7019; --olive-deep-hover:#6a8220;
+  --brand:#8fc4b0; --rule:#3a3d35; --track:#3d4038; --soft:#30332b; --pill:#2b2e27;
+  --bad:#e86a6a; --mid:#7f8d63; --dark:#a3b08c; --warn:#e0b07c; --warn-bg:#3b3226; --check:#aab0e8;
+}
+html[lang="ar"]{
+  --serif:"Noto Naskh Arabic", "Times New Roman", serif;
+  --sans:"IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
+*,*::before,*::after{ box-sizing:inherit; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,p{ margin:0; }
+h1,h2,h3{ font-weight:400; }
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; }
+:focus-visible{ outline:3px solid var(--olive-deep); outline-offset:3px; border-radius:6px; }
+.wrap{ width:min(1080px, 100% - 2.5rem); margin-inline:auto; }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.75rem 1.3rem; border-radius:999px; font:600 .92rem/1 var(--sans); border:0; cursor:pointer; text-decoration:none; white-space:nowrap; }
+.btn-primary{ background:var(--olive-deep); color:var(--on-olive); }
+.btn-primary:hover{ background:var(--olive-deep-hover); }
+.btn-ghost{ background:transparent; color:var(--ink); box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 40%,transparent); }
+.btn-ghost:hover{ box-shadow:inset 0 0 0 1.5px var(--ink); }
+.btn-sm{ padding:.5rem .95rem; font-size:.84rem; }
+.card{ background:var(--raised); border-radius:20px; padding:clamp(1.3rem,3vw,2rem); }
+
+/* Header */
+.top{ padding-block:1rem; }
+.top .wrap{ display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.logo{ display:flex; align-items:center; text-decoration:none; }
+.slot{ margin:0; width:160px; height:58px; }
+.slot img{ width:100%; height:100%; object-fit:contain; }
+.wordmark{ display:none; font:700 1.8rem/1 var(--sans); color:var(--brand); gap:.4rem; align-items:baseline; }
+.wordmark span{ font-family:"IBM Plex Sans Arabic", sans-serif; }
+.slot.empty{ display:none; }
+.slot.empty + .wordmark{ display:flex; }
+.top-actions{ display:flex; gap:.6rem; align-items:center; }
+.back{ font-weight:600; font-size:.92rem; text-decoration:none; display:inline-flex; gap:.35rem; align-items:center; }
+.back:hover{ text-decoration:underline; text-underline-offset:4px; }
+.back svg{ width:1rem; height:1rem; }
+[dir="rtl"] .back svg, [dir="rtl"] .flip{ transform:scaleX(-1); }
+.lang-btn{ font:600 .88rem/1 var(--sans); background:transparent; color:var(--ink); border:1.5px solid color-mix(in srgb,var(--ink) 35%,transparent); border-radius:999px; padding:.65rem 1rem; cursor:pointer; }
+#langBtn{ font-family:"IBM Plex Sans Arabic","DM Sans",sans-serif; }
+
+/* Intro + stepper */
+.intro{ padding-block:2rem 1.5rem; display:flex; flex-direction:column; gap:1rem; align-items:flex-start; }
+.badge{ display:inline-flex; align-items:center; gap:.5rem; padding:.4rem .85rem; border-radius:999px; background:var(--raised); font-weight:600; font-size:.85rem; }
+.badge::before{ content:""; width:.5rem; height:.5rem; border-radius:50%; background:var(--olive-deep); }
+.intro h1{ font-family:var(--serif); font-size:clamp(2.2rem,4.5vw,3.4rem); line-height:1.08; }
+html[lang="ar"] .intro h1{ line-height:1.4; }
+.intro p{ color:var(--ink-soft); max-width:40rem; font-size:1.05rem; }
+.steps{ list-style:none; margin:1.2rem 0 0; padding:0; display:flex; gap:.5rem; flex-wrap:wrap; }
+.steps li{ display:flex; align-items:center; gap:.55rem; padding:.45rem .95rem .45rem .5rem; border-radius:999px; background:var(--pill); color:var(--ink-muted); font-weight:600; font-size:.88rem; }
+[dir="rtl"] .steps li{ padding:.45rem .5rem .45rem .95rem; }
+.steps .n{ width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center; background:var(--raised); font-size:.8rem; }
+.steps li.now{ background:var(--olive-deep); color:#fff; }
+.steps li.now .n{ background:#fff; color:var(--olive-deep); }
+.steps li.done{ color:var(--ink); }
+.steps li.done .n{ background:var(--olive); color:#fff; }
+
+.panel{ padding-bottom:4rem; }
+.panel h2{ font:700 1.35rem/1.25 var(--sans); }
+.panel h2:focus{ outline:none; }
+.muted{ color:var(--ink-muted); font-size:.9rem; }
+
+/* Step 1: upload */
+.upload{ display:grid; grid-template-columns:1.3fr 1fr; gap:1.5rem; align-items:start; }
+.drop{ margin-top:1.2rem; border:2px dashed color-mix(in srgb,var(--ink) 25%,transparent); border-radius:16px; padding:2.6rem 1.2rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.6rem; transition:background-color .2s, border-color .2s; }
+.drop.over{ border-color:var(--olive-deep); background:color-mix(in srgb,var(--olive) 14%,transparent); }
+.drop svg{ width:2.4rem; height:2.4rem; color:var(--olive-deep); }
+.drop strong{ font-size:1rem; }
+.drop .btn{ margin-top:.4rem; }
+.samples{ list-style:none; margin:1rem 0 0; padding:0; display:flex; flex-direction:column; gap:.6rem; }
+.samples button{ width:100%; display:flex; align-items:center; gap:.75rem; padding:.9rem 1rem; border-radius:14px; border:1px solid var(--rule); background:var(--raised); color:var(--ink); font:500 .93rem/1.3 var(--sans); cursor:pointer; text-align:start; }
+.samples button:hover{ border-color:var(--olive-deep); }
+.samples .ext{ flex:none; font:700 .68rem/1 var(--sans); padding:.4rem .45rem; border-radius:6px; background:var(--soft); color:var(--ink-soft); min-width:2.8rem; text-align:center; }
+.samples .fn{ direction:ltr; unicode-bidi:isolate; flex:1; }
+.note{ margin-top:1rem; font-size:.84rem; color:var(--ink-muted); }
+
+/* Scanning */
+.scanning{ max-width:36rem; margin-inline:auto; text-align:center; display:flex; flex-direction:column; gap:1rem; align-items:center; }
+.bar{ width:100%; height:12px; border-radius:999px; background:var(--track); overflow:hidden; }
+.bar i{ display:block; height:100%; width:0; border-radius:inherit; background:var(--olive-deep); }
+[dir="rtl"] .bar i{ margin-inline-start:auto; margin-inline-end:0; }
+.fname{ direction:ltr; unicode-bidi:isolate; font-weight:600; }
+
+/* Step 2: results */
+.results{ display:grid; grid-template-columns:1fr 1.4fr; gap:1.5rem; align-items:stretch; }
+.score{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; text-align:center; }
+.ring{ width:170px; height:170px; position:relative; }
+.ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
+.ring circle{ fill:none; stroke-width:12; }
+.ring .bg{ stroke:var(--track); }
+.ring .fg{ stroke:var(--bad); stroke-linecap:round; transition:stroke-dashoffset 1s ease; }
+.ring .val{ position:absolute; inset:0; display:grid; place-items:center; font:700 2.6rem/1 var(--sans); }
+.ring .val small{ display:block; font-size:.85rem; font-weight:500; color:var(--ink-muted); margin-top:.3rem; }
+.issues{ display:flex; flex-direction:column; gap:1.4rem; }
+.issue-head{ display:flex; justify-content:space-between; gap:1rem; align-items:baseline; margin-bottom:.55rem; flex-wrap:wrap; }
+.issue-head strong{ font-weight:600; }
+.issue .bar{ height:16px; }
+.issue .bar i{ transition:width 1s ease; }
+.i-alt .bar i{ background:var(--bad); } .i-rtl .bar i{ background:var(--mid); } .i-tab .bar i{ background:var(--dark); }
+.row-actions{ display:flex; gap:.7rem; flex-wrap:wrap; margin-top:.6rem; }
+
+/* Step 3: review */
+.review-head{ display:flex; justify-content:space-between; gap:1.5rem; align-items:flex-end; flex-wrap:wrap; margin-bottom:1.4rem; }
+.file-pill{ display:inline-flex; gap:.5rem; align-items:center; background:var(--raised); border-radius:999px; padding:.5rem 1rem; font-size:.88rem; }
+.counters{ display:grid; grid-template-columns:repeat(3,minmax(6.5rem,1fr)); gap:.8rem; }
+.counter{ background:var(--raised); border-radius:16px; padding:1rem; text-align:center; }
+.counter b{ display:block; font:500 2rem/1 var(--sans); }
+.counter span{ font-size:.9rem; color:var(--ink-soft); }
+.c-acc b{ color:var(--olive-deep); } .c-pen b{ color:var(--warn); }
+.groups{ display:flex; flex-direction:column; gap:1rem; }
+.group{ padding:0; overflow:hidden; }
+.group-head{ display:flex; gap:1rem; align-items:center; padding:1.2rem 1.4rem; }
+.group-head .txt{ flex:1; min-width:0; }
+.group-head h3{ font:700 1.15rem/1.3 var(--sans); }
+.group-head p{ font-size:.9rem; color:var(--ink-soft); }
+.count-pill{ font-size:.8rem; font-weight:600; padding:.3rem .75rem; border-radius:999px; border:1.5px solid currentColor; white-space:nowrap; }
+.g-alt .count-pill{ color:var(--olive-deep); } .g-rtl .count-pill{ color:var(--warn); } .g-tab .count-pill{ color:var(--check); }
+.toggle{ background:none; border:0; color:var(--ink); cursor:pointer; padding:.4rem; border-radius:8px; }
+.toggle svg{ width:1.2rem; height:1.2rem; transition:transform .2s; }
+.toggle[aria-expanded="true"] svg{ transform:rotate(180deg); }
+.group-tools{ display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+.items{ list-style:none; margin:0; padding:0 1.4rem 1.2rem; display:flex; flex-direction:column; gap:.6rem; }
+.items[hidden]{ display:none; }
+.item{ display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; padding:.9rem 1rem; border-radius:12px; background:var(--soft); border-inline-start:4px solid var(--warn); }
+.item.is-accepted{ border-inline-start-color:var(--olive-deep); }
+.item.is-rejected{ border-inline-start-color:var(--ink-muted); opacity:.7; }
+.item-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:.35rem; }
+.item-label{ font-size:.8rem; color:var(--ink-muted); font-weight:600; }
+.alt{ font-family:"IBM Plex Sans Arabic", var(--sans); font-size:1rem; }
+.item textarea{ width:100%; min-height:4.2rem; font:400 1rem/1.5 "IBM Plex Sans Arabic", var(--sans); padding:.6rem .7rem; border-radius:10px; border:1.5px solid var(--olive-deep); background:var(--raised); color:var(--ink); resize:vertical; }
+.order{ display:flex; flex-wrap:wrap; align-items:center; gap:.35rem; font-size:.85rem; }
+.order .lbl{ min-width:3.2rem; color:var(--ink-muted); font-weight:600; }
+.chip{ background:var(--raised); padding:.2rem .55rem; border-radius:6px; }
+.order.after .chip{ background:color-mix(in srgb,var(--olive) 30%,var(--raised)); }
+.arr{ width:.85rem; height:.85rem; color:var(--ink-muted); }
+.flag{ align-self:flex-start; font-size:.78rem; font-weight:700; color:var(--warn); background:var(--warn-bg); padding:.25rem .6rem; border-radius:999px; }
+.item-actions{ display:flex; gap:.4rem; flex-wrap:wrap; justify-content:flex-end; }
+.act{ font:600 .82rem/1 var(--sans); padding:.5rem .8rem; border-radius:999px; border:0; cursor:pointer; background:var(--raised); color:var(--ink); box-shadow:inset 0 0 0 1px var(--rule); }
+.act:hover{ box-shadow:inset 0 0 0 1.5px var(--ink); }
+.act.ok{ background:var(--olive-deep); color:#fff; box-shadow:none; }
+.status{ font-size:.82rem; font-weight:700; padding:.45rem .2rem; }
+.is-accepted .status{ color:var(--olive-deep); } .is-rejected .status{ color:var(--ink-muted); }
+.export-bar{ position:sticky; bottom:0; margin-top:1.5rem; padding:1rem 0 calc(1rem + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent, var(--bg) 35%); display:flex; flex-direction:column; align-items:center; gap:.4rem; }
+.export-bar .btn{ padding:.95rem 2rem; font-size:1rem; }
+
+/* Step 4: done */
+.done{ display:grid; grid-template-columns:1fr 1.2fr; gap:1.5rem; }
+.compare{ display:flex; justify-content:center; gap:2.5rem; align-items:center; }
+.compare .ring{ width:130px; height:130px; }
+.compare .ring .val{ font-size:2rem; }
+.compare .after .fg{ stroke:var(--olive-deep); }
+.compare p{ text-align:center; margin-top:.5rem; font-weight:600; color:var(--ink-soft); }
+.done-copy{ display:flex; flex-direction:column; gap:1rem; justify-content:center; }
+.done-copy h2{ font-family:var(--serif); font-weight:400; font-size:clamp(1.9rem,3.5vw,2.6rem); line-height:1.1; }
+html[lang="ar"] .done-copy h2{ line-height:1.45; }
+.summary{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+.summary li{ display:flex; justify-content:space-between; gap:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--rule); font-size:.95rem; }
+.cta-strip{ margin-top:1.5rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; background:var(--olive); color:#fff; border-radius:20px; padding:1.4rem 1.8rem; }
+.cta-strip p{ font-family:var(--serif); font-size:1.6rem; line-height:1.2; }
+.cta-strip .btn{ background:#fff; color:#2b3410; }
+
+@media (max-width: 820px){
+  .upload, .results, .done{ grid-template-columns:1fr; }
+  .item{ flex-direction:column; }
+  .item-actions{ justify-content:flex-start; }
+  .group-head{ flex-wrap:wrap; }
+}
+@media (max-width: 480px){ .back span{ display:none; } .counters{ grid-template-columns:repeat(3,1fr); } .counter b{ font-size:1.6rem; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="YUSR home">
+      <figure class="slot empty"><img src="images\Picture1.png" alt="YUSR يسر"></figure>
+      <span class="wordmark">YUSR <span>يسر</span></span>
+    </a>
+    <div class="top-actions">
+      <a class="back" href="index.html"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg><span data-i18n="back">Back to home</span></a>
+      <button class="lang-btn" id="langBtn" type="button" lang="ar">العربية</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <p class="badge" data-i18n="badge">Interactive preview with sample data</p>
+    <h1 data-i18n="title">Try YUSR on a sample document</h1>
+    <p data-i18n="sub">Upload a file, see what's blocking screen readers, then review every AI fix before you export.</p>
+    <ol class="steps" id="steps">
+      <li><span class="n">1</span><span data-i18n="s1">Upload</span></li>
+      <li><span class="n">2</span><span data-i18n="s2">Scan</span></li>
+      <li><span class="n">3</span><span data-i18n="s3">Review</span></li>
+      <li><span class="n">4</span><span data-i18n="s4">Export</span></li>
+    </ol>
+  </section>
+
+  <!-- STEP 1: Upload -->
+  <section class="panel" id="p-upload">
+    <div class="upload">
+      <div class="card">
+        <h2 tabindex="-1" data-i18n="upTitle">Upload your document</h2>
+        <div class="drop" id="drop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 7.5a4 4 0 0 1-.5 10.5"/><path d="M12 12v8M8.5 15.5 12 12l3.5 3.5"/></svg>
+          <strong data-i18n="drop">Drop a file here or browse</strong>
+          <span class="muted" data-i18n="types">PDF, DOCX, HTML or images</span>
+          <label class="btn btn-primary"><span data-i18n="browse">Browse files</span><input type="file" id="fileInput" accept=".pdf,.docx,.html,.htm,.png,.jpg,.jpeg" hidden></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2 data-i18n="orSample">Or try a sample file</h2>
+        <ul class="samples">
+          <li><button type="button" data-file="annual-report-2024-AR.pdf"><span class="ext">PDF</span><span class="fn">annual-report-2024-AR.pdf</span></button></li>
+          <li><button type="button" data-file="course-material-arabic.docx"><span class="ext">DOCX</span><span class="fn">course-material-arabic.docx</span></button></li>
+          <li><button type="button" data-file="ministry-services-portal.html"><span class="ext">HTML</span><span class="fn">ministry-services-portal.html</span></button></li>
+        </ul>
+        <p class="note" data-i18n="note">This preview runs on sample results. Your file isn't uploaded anywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scanning / fixing progress -->
+  <section class="panel" id="p-progress" hidden>
+    <div class="card scanning">
+      <h2 tabindex="-1" id="progTitle"></h2>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progBar"><i></i></div>
+      <p class="muted" id="progStep" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- STEP 2: Results -->
+  <section class="panel" id="p-results" hidden>
+    <div class="results">
+      <div class="card score">
+        <div class="ring" id="scoreRing"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52"/></svg><div class="val"><div>38<small data-i18n="outOf">out of 100</small></div></div></div>
+        <p><strong data-i18n="score">Accessibility score</strong></p>
+        <p class="fname" id="resFile"></p>
+      </div>
+      <div class="card">
+        <h2 tabindex="-1" id="resTitle"></h2>
+        <p class="muted" data-i18n="resSub" style="margin:.3rem 0 1.6rem">Share of content screen readers can't use correctly.</p>
+        <div class="issues">
+          <div class="issue i-alt"><div class="issue-head"><strong data-i18n="iAlt">Missing Arabic alt-text</strong><span class="muted" data-tpl="nAlt"></span></div><div class="bar"><i data-w="86"></i></div></div>
+          <div class="issue i-rtl"><div class="issue-head"><strong data-i18n="iRtl">RTL reading order errors</strong><span class="muted" data-tpl="nRtl"></span></div><div class="bar"><i data-w="42"></i></div></div>
+          <div class="issue i-tab"><div class="issue-head"><strong data-i18n="iTab">Inaccessible table structure</strong><span class="muted" data-tpl="nTab"></span></div><div class="bar"><i data-w="75"></i></div></div>
+        </div>
+        <div class="row-actions" style="margin-top:2rem">
+          <button class="btn btn-primary" type="button" id="fixBtn" data-i18n="fixBtn">Fix with AI</button>
+          <button class="btn btn-ghost" type="button" data-restart data-i18n="another">Scan another file</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3: Review -->
+  <section class="panel" id="p-review" hidden>
+    <div class="review-head">
+      <div>
+        <span class="file-pill"><span class="fname" id="revFile"></span></span>
+        <h2 tabindex="-1" style="margin-top:.8rem" data-i18n="revTitle">Review AI-generated fixes</h2>
+        <p class="muted" data-i18n="revSub">Accept, edit or reject each change. Nothing is exported until you approve it.</p>
+      </div>
+      <div class="counters" aria-live="polite">
+        <div class="counter c-acc"><b id="cAcc">0</b><span data-i18n="accepted">Accepted</span></div>
+        <div class="counter c-pen"><b id="cPen">0</b><span data-i18n="pending">Pending</span></div>
+        <div class="counter"><b id="cTot">0</b><span data-i18n="total">Total</span></div>
+      </div>
+    </div>
+    <div class="groups" id="groups"></div>
+    <div class="export-bar">
+      <button class="btn btn-primary" type="button" id="exportBtn"></button>
+      <p class="muted" id="exportNote"></p>
+    </div>
+  </section>
+
+  <!-- STEP 4: Done -->
+  <section class="panel" id="p-done" hidden>
+    <div class="done">
+      <div class="card compare">
+        <div><div class="ring before"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52"/></svg><div class="val">38</div></div><p data-i18n="before">Before</p></div>
+        <div><div class="ring after" id="afterRing"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52"/></svg><div class="val" id="afterVal">0</div></div><p data-i18n="after">After</p></div>
+      </div>
+      <div class="card done-copy">
+        <h2 tabindex="-1" data-i18n="doneTitle">Your accessible document is ready</h2>
+        <ul class="summary" id="summary"></ul>
+        <div class="row-actions">
+<button class="btn btn-primary" type="button" id="dlBtn" data-i18n="download">Download accessible version</button>
+          <button class="btn btn-ghost" type="button" data-restart data-i18n="startOver">Try another file</button>
+        </div>
+      </div>
+    </div>
+    <div class="cta-strip">
+      <p data-i18n="ctaTitle">Want this for your organization?</p>
+      <a class="btn" href="index.html#contact" data-i18n="ctaBtn">Join the waitlist</a>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var T = {
+    en:{ back:"Back to home", badge:"Interactive preview with sample data", title:"Try YUSR on a sample document",
+      sub:"Upload a file, see what's blocking screen readers, then review every AI fix before you export.",
+      s1:"Upload", s2:"Scan", s3:"Review", s4:"Export",
+      upTitle:"Upload your document", drop:"Drop a file here or browse", types:"PDF, DOCX, HTML or images", browse:"Browse files",
+      orSample:"Or try a sample file", note:"This preview runs on sample results. Your file isn't uploaded anywhere.",
+      scanning:"Scanning {f}", fixing:"Generating fixes",
+      sc1:"Reading pages", sc2:"Checking images", sc3:"Checking reading order", sc4:"Checking tables",
+      fx1:"Writing Arabic descriptions", fx2:"Reordering pages", fx3:"Tagging tables",
+      resTitle:"{n} accessibility issues found", resSub:"Share of content screen readers can't use correctly.",
+      score:"Accessibility score", outOf:"out of 100",
+      iAlt:"Missing Arabic alt-text", iRtl:"RTL reading order errors", iTab:"Inaccessible table structure",
+      nAlt:"12 of 14 images", nRtl:"5 of 12 pages", nTab:"3 of 4 tables",
+      fixBtn:"Fix with AI", another:"Scan another file",
+      revTitle:"Review AI-generated fixes", revSub:"Accept, edit or reject each change. Nothing is exported until you approve it.",
+      accepted:"Accepted", pending:"Pending", total:"Total",
+      gAlt:"Arabic alt-text", gAltD:"Descriptions written for every image and chart.", gAltN:"{n} images",
+      gRtl:"RTL reading order", gRtlD:"Reading sequence corrected so screen readers go right to left.", gRtlN:"{n} pages",
+      gTab:"Table structure", gTabD:"Headers and cells tagged so tables read correctly.", gTabN:"{n} tables",
+      acceptAll:"Accept all", accept:"Accept", edit:"Edit", save:"Save", reject:"Reject", undo:"Undo",
+      stAcc:"Accepted", stEd:"Edited and accepted", stRej:"Rejected",
+      showItems:"Show changes", hideItems:"Hide changes",
+      flag:"Check manually: mixed layout", before:"Before", after:"After",
+      lImg:"Image {i}, page {p}", lPage:"Page {p}", lTab:"Table {i}, page {p}",
+      tabLine:"{h} header cells tagged, {c} data cells linked to their headers",
+      exportAll:"Approve all and export", exportOnly:"Export accessible version",
+      exportNote:"{n} pending fixes will be accepted.", exportReady:"All fixes reviewed.",
+      doneTitle:"Your accessible document is ready", sumApplied:"Fixes applied", sumRejected:"Fixes rejected", sumEdited:"Edited by you", sumFile:"File",
+      download:"Download accessible version", startOver:"Try another file",
+      ctaTitle:"Want this for your organization?", ctaBtn:"Join the waitlist",
+      b_title:"Title", b_body:"Body text", b_side:"Sidebar", b_c1:"Right column", b_c2:"Left column", b_foot:"Footer", b_cap:"Caption",
+      langBtn:"العربية", langBtnLang:"ar", docTitle:"Try YUSR | يسر" },
+    ar:{ back:"العودة للرئيسية", badge:"معاينة تفاعلية ببيانات تجريبية", title:"جرّب يسر على مستند تجريبي",
+      sub:"ارفع ملفًا، واكتشف ما يعيق قارئات الشاشة، ثم راجع كل إصلاح قبل التصدير.",
+      s1:"رفع الملف", s2:"الفحص", s3:"المراجعة", s4:"التصدير",
+      upTitle:"ارفع مستندك", drop:"اسحب الملف هنا أو اختر من جهازك", types:"PDF أو DOCX أو HTML أو صور", browse:"اختر ملفًا",
+      orSample:"أو جرّب ملفًا تجريبيًا", note:"تعمل هذه المعاينة بنتائج تجريبية، ولا يتم رفع ملفك إلى أي مكان.",
+      scanning:"جارٍ فحص {f}", fixing:"جارٍ إنشاء الإصلاحات",
+      sc1:"قراءة الصفحات", sc2:"فحص الصور", sc3:"فحص ترتيب القراءة", sc4:"فحص الجداول",
+      fx1:"كتابة الأوصاف العربية", fx2:"إعادة ترتيب الصفحات", fx3:"وسم الجداول",
+      resTitle:"عدد مشكلات الإتاحة: {n}", resSub:"نسبة المحتوى الذي لا تستطيع قارئات الشاشة التعامل معه بشكل صحيح.",
+      score:"درجة الإتاحة", outOf:"من 100",
+      iAlt:"نص بديل عربي مفقود", iRtl:"أخطاء ترتيب القراءة", iTab:"جداول غير ميسّرة",
+      nAlt:"12 من 14 صورة", nRtl:"5 من 12 صفحة", nTab:"3 من 4 جداول",
+      fixBtn:"أصلح بالذكاء الاصطناعي", another:"افحص ملفًا آخر",
+      revTitle:"راجع الإصلاحات المقترحة", revSub:"اقبل كل تعديل أو عدّله أو ارفضه. لن يُصدَّر شيء قبل موافقتك.",
+      accepted:"مقبول", pending:"بانتظار المراجعة", total:"الإجمالي",
+      gAlt:"النص البديل العربي", gAltD:"أوصاف مكتوبة لكل صورة ورسم بياني.", gAltN:"الصور: {n}",
+      gRtl:"ترتيب القراءة", gRtlD:"تم تصحيح تسلسل القراءة لتقرأه قارئات الشاشة من اليمين إلى اليسار.", gRtlN:"الصفحات: {n}",
+      gTab:"بنية الجداول", gTabD:"تم وسم الرؤوس والخلايا لتُقرأ الجداول بشكل صحيح.", gTabN:"الجداول: {n}",
+      acceptAll:"قبول الكل", accept:"قبول", edit:"تعديل", save:"حفظ", reject:"رفض", undo:"تراجع",
+      stAcc:"مقبول", stEd:"عُدّل وقُبل", stRej:"مرفوض",
+      showItems:"عرض التعديلات", hideItems:"إخفاء التعديلات",
+      flag:"تحقق يدويًا: تخطيط مختلط", before:"قبل", after:"بعد",
+      lImg:"صورة {i}، صفحة {p}", lPage:"صفحة {p}", lTab:"جدول {i}، صفحة {p}",
+      tabLine:"خلايا الرأس الموسومة: {h}، خلايا البيانات المرتبطة برؤوسها: {c}",
+      exportAll:"اعتماد الكل والتصدير", exportOnly:"تصدير النسخة الميسّرة",
+      exportNote:"سيتم قبول الإصلاحات المتبقية ({n}).", exportReady:"تمت مراجعة جميع الإصلاحات.",
+      doneTitle:"مستندك الميسّر جاهز", sumApplied:"الإصلاحات المطبّقة", sumRejected:"الإصلاحات المرفوضة", sumEdited:"عدّلتها بنفسك", sumFile:"الملف",
+      download:"تنزيل النسخة", startOver:"جرّب ملفًا آخر",
+      ctaTitle:"تريد هذا لمؤسستك؟", ctaBtn:"انضم لقائمة الانتظار",
+      b_title:"العنوان", b_body:"النص", b_side:"عمود جانبي", b_c1:"العمود الأيمن", b_c2:"العمود الأيسر", b_foot:"التذييل", b_cap:"التعليق",
+      langBtn:"English", langBtnLang:"en", docTitle:"جرّب يسر | YUSR" }
+  };
+
+  /* ---------- Sample data ---------- */
+  var ALT = [
+    [1,"شعار الجهة باللونين الأخضر والذهبي."],
+    [2,"صورة لرئيس مجلس الإدارة يلقي كلمة في حفل افتتاح المقر الجديد."],
+    [3,"رسم بياني عمودي يوضح نمو الإيرادات من 2020 إلى 2024 بارتفاع 34٪."],
+    [3,"خريطة المملكة تُظهر توزيع الفروع على 13 منطقة."],
+    [4,"رسم دائري لتوزيع المصروفات: الرواتب 45٪، التشغيل 30٪، المشاريع 25٪."],
+    [5,"صورة لفريق العمل خلال ورشة تدريبية عن الخدمات الرقمية."],
+    [5,"مخطط زمني لمراحل التحول الرقمي من 2021 إلى 2025."],
+    [6,"رسم بياني خطي لعدد المستفيدين شهريًا خلال عام 2024."],
+    [7,"أيقونة تمثل خدمة طلب الوثائق إلكترونيًا."],
+    [9,"صورة لمبنى المقر الرئيسي في الرياض."],
+    [10,"رسم بياني يقارن رضا المستفيدين بين 2023 و2024، من 78٪ إلى 86٪."],
+    [11,"رمز استجابة سريعة يقود إلى النسخة الإلكترونية من التقرير."]
+  ];
+  var RTL = [
+    {p:2, b:["c2","c1"], a:["c1","c2"]},
+    {p:3, b:["body","title"], a:["title","body"]},
+    {p:5, b:["side","body","cap"], a:["body","cap","side"]},
+    {p:8, b:["c2","foot","c1"], a:["c1","c2","foot"], flag:true},
+    {p:11, b:["foot","body"], a:["body","foot"]}
+  ];
+  var TAB = [ {p:4,h:5,c:30}, {p:6,h:4,c:16}, {p:10,h:3,c:39} ];
+
+  var lang = "en", file = "", items = [], open = {alt:true, rtl:false, tab:false}, editing = null;
+  try { var s = localStorage.getItem("yusr-lang"); if (s === "ar" || s === "en") lang = s; } catch(e){}
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function t(k, v){ var s = (T[lang][k] != null ? T[lang][k] : T.en[k]) || ""; if (v) for (var x in v) s = s.split("{"+x+"}").join(v[x]); return s; }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  function buildItems(){
+    items = [];
+    ALT.forEach(function(a,i){ items.push({id:"a"+i, g:"alt", i:i+1, p:a[0], text:a[1], st:"pending", ed:false}); });
+    RTL.forEach(function(r,i){ items.push({id:"r"+i, g:"rtl", p:r.p, b:r.b, a:r.a, flag:!!r.flag, st:"pending"}); });
+    TAB.forEach(function(r,i){ items.push({id:"t"+i, g:"tab", i:i+1, p:r.p, h:r.h, c:r.c, st:"pending"}); });
+  }
+
+  /* ---------- Steps / panels ---------- */
+  var panels = ["p-upload","p-progress","p-results","p-review","p-done"];
+  var stepOf = {"p-upload":1,"p-progress":2,"p-results":2,"p-review":3,"p-done":4};
+  function show(id){
+    panels.forEach(function(p){ $(p).hidden = p !== id; });
+    var n = stepOf[id];
+    document.querySelectorAll("#steps li").forEach(function(li,i){
+      li.className = i+1 < n ? "done" : i+1 === n ? "now" : "";
+      if (i+1 === n) li.setAttribute("aria-current","step"); else li.removeAttribute("aria-current");
+    });
+    var h = $(id).querySelector("h2"); if (h) h.focus({preventScroll:true});
+    window.scrollTo({top: document.querySelector(".intro").offsetTop + 120 > window.scrollY ? window.scrollY : document.querySelector(".steps").offsetTop - 20});
+  }
+
+  function ring(el, val, max){
+    var c = el.querySelector(".fg"), r = 52, L = 2*Math.PI*r;
+    c.style.strokeDasharray = L; c.style.strokeDashoffset = L;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ c.style.strokeDashoffset = L*(1 - val/max); }); });
+  }
+
+  function progress(titleKey, stepKeys, done){
+    show("p-progress");
+    $("progTitle").innerHTML = t(titleKey, {f:'<span class="fname">'+esc(file)+'</span>'});
+    var bar = $("progBar"), fill = bar.querySelector("i"), dur = reduce ? 600 : 2400, start = null;
+    function frame(ts){
+      if (!start) start = ts;
+      var k = Math.min(1, (ts-start)/dur), pct = Math.round(k*100);
+      fill.style.width = pct + "%"; bar.setAttribute("aria-valuenow", pct);
+      $("progStep").textContent = t(stepKeys[Math.min(stepKeys.length-1, Math.floor(k*stepKeys.length))]);
+      if (k < 1) requestAnimationFrame(frame); else setTimeout(done, 250);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function startScan(name){
+    file = name; buildItems();
+    progress("scanning", ["sc1","sc2","sc3","sc4"], showResults);
+  }
+
+  function showResults(){
+    show("p-results");
+    $("resFile").textContent = file;
+    $("resTitle").textContent = t("resTitle", {n: items.length});
+    document.querySelectorAll(".issue .bar i").forEach(function(i){ i.style.width = "0"; });
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      document.querySelectorAll(".issue .bar i").forEach(function(i){ i.style.width = i.dataset.w + "%"; });
+    }); });
+    ring($("scoreRing"), 38, 100);
+  }
+
+  /* ---------- Review ---------- */
+  var ARROW = '<svg class="arr flip" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+  function chips(list){ return list.map(function(k){ return '<span class="chip">'+esc(t("b_"+k))+'</span>'; }).join(ARROW); }
+
+  function itemHTML(it){
+    var label, body = "";
+    if (it.g === "alt"){
+      label = t("lImg",{i:it.i,p:it.p});
+      body = editing === it.id
+        ? '<textarea id="ed-'+it.id+'" lang="ar" dir="rtl" aria-label="'+esc(label)+'">'+esc(it.text)+'</textarea>'
+        : '<p class="alt" lang="ar" dir="rtl">'+esc(it.text)+'</p>';
+    } else if (it.g === "rtl"){
+      label = t("lPage",{p:it.p});
+      body = '<div class="order"><span class="lbl">'+t("before")+'</span>'+chips(it.b)+'</div><div class="order after"><span class="lbl">'+t("after")+'</span>'+chips(it.a)+'</div>' + (it.flag ? '<span class="flag">'+t("flag")+'</span>' : "");
+    } else {
+      label = t("lTab",{i:it.i,p:it.p});
+      body = '<p>'+esc(t("tabLine",{h:it.h,c:it.c}))+'</p>';
+    }
+    var acts;
+    if (editing === it.id) acts = '<button class="act ok" data-act="save" data-id="'+it.id+'">'+t("save")+'</button>';
+    else if (it.st === "pending") acts = '<button class="act ok" data-act="accept" data-id="'+it.id+'">'+t("accept")+'</button>' + (it.g === "alt" ? '<button class="act" data-act="edit" data-id="'+it.id+'">'+t("edit")+'</button>' : "") + '<button class="act" data-act="reject" data-id="'+it.id+'">'+t("reject")+'</button>';
+    else acts = '<span class="status">'+(it.st === "rejected" ? t("stRej") : it.ed ? t("stEd") : t("stAcc"))+'</span><button class="act" data-act="undo" data-id="'+it.id+'">'+t("undo")+'</button>';
+    return '<li class="item is-'+it.st+'"><div class="item-main"><span class="item-label">'+esc(label)+'</span>'+body+'</div><div class="item-actions">'+acts+'</div></li>';
+  }
+
+  function renderReview(){
+    var G = [["alt","gAlt","gAltD","gAltN"],["rtl","gRtl","gRtlD","gRtlN"],["tab","gTab","gTabD","gTabN"]];
+    $("groups").innerHTML = G.map(function(g){
+      var list = items.filter(function(i){ return i.g === g[0]; });
+      var pend = list.filter(function(i){ return i.st === "pending"; }).length;
+      return '<article class="card group g-'+g[0]+'"><div class="group-head"><div class="txt"><h3>'+t(g[1])+'</h3><p>'+t(g[2])+'</p></div>'
+        + '<div class="group-tools"><span class="count-pill">'+t(g[3],{n:list.length})+'</span>'
+        + (pend ? '<button class="btn btn-primary btn-sm" data-act="all" data-g="'+g[0]+'">'+t("acceptAll")+'</button>' : '')
+        + '<button class="toggle" data-act="toggle" data-g="'+g[0]+'" aria-expanded="'+open[g[0]]+'" aria-controls="list-'+g[0]+'" aria-label="'+(open[g[0]]?t("hideItems"):t("showItems"))+'"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg></button></div></div>'
+        + '<ul class="items" id="list-'+g[0]+'"'+(open[g[0]]?'':' hidden')+'>'+list.map(itemHTML).join("")+'</ul></article>';
+    }).join("");
+    var acc = items.filter(function(i){ return i.st === "accepted"; }).length;
+    var pen = items.filter(function(i){ return i.st === "pending"; }).length;
+    $("cAcc").textContent = acc; $("cPen").textContent = pen; $("cTot").textContent = items.length;
+    $("exportBtn").textContent = pen ? t("exportAll") : t("exportOnly");
+    $("exportNote").textContent = pen ? t("exportNote",{n:pen}) : t("exportReady");
+    $("revFile").textContent = file;
+    if (editing){ var ta = $("ed-"+editing); if (ta) ta.focus(); }
+  }
+
+  function find(id){ for (var i=0;i<items.length;i++) if (items[i].id === id) return items[i]; }
+
+  $("groups").addEventListener("click", function(e){
+    var b = e.target.closest("[data-act]"); if (!b) return;
+    var act = b.dataset.act, it = b.dataset.id ? find(b.dataset.id) : null;
+    if (act === "toggle"){ open[b.dataset.g] = !open[b.dataset.g]; }
+    else if (act === "all"){ items.forEach(function(i){ if (i.g === b.dataset.g && i.st === "pending") i.st = "accepted"; }); if (editing && find(editing).g === b.dataset.g) editing = null; }
+    else if (act === "accept"){ it.st = "accepted"; }
+    else if (act === "reject"){ it.st = "rejected"; }
+    else if (act === "undo"){ it.st = "pending"; }
+    else if (act === "edit"){ editing = it.id; }
+    else if (act === "save"){ var v = $("ed-"+it.id).value.trim(); if (v){ if (v !== it.text) it.ed = true; it.text = v; } it.st = "accepted"; editing = null; }
+    renderReview();
+    if (!editing && b.dataset.id){ var nb = document.querySelector('[data-id="'+b.dataset.id+'"]'); if (nb) nb.focus(); }
+  });
+
+  $("fixBtn").addEventListener("click", function(){
+    progress("fixing", ["fx1","fx2","fx3"], function(){ show("p-review"); renderReview(); });
+  });
+
+  $("exportBtn").addEventListener("click", function(){
+    if (editing){ var it = find(editing), v = $("ed-"+editing).value.trim(); if (v && v !== it.text){ it.text = v; it.ed = true; } editing = null; }
+    items.forEach(function(i){ if (i.st === "pending") i.st = "accepted"; });
+    showDone();
+  });
+
+  /* ---------- Done ---------- */
+  function afterScore(){ var acc = items.filter(function(i){ return i.st === "accepted"; }).length; return Math.round(38 + 58*acc/items.length); }
+  function showDone(){
+    show("p-done");
+    var acc = items.filter(function(i){ return i.st === "accepted"; }).length;
+    var rej = items.filter(function(i){ return i.st === "rejected"; }).length;
+    var ed = items.filter(function(i){ return i.ed; }).length;
+    var sc = afterScore();
+    $("afterVal").textContent = sc;
+    ring(document.querySelector(".compare .before"), 38, 100);
+    ring($("afterRing"), sc, 100);
+    renderSummary(acc, rej, ed);
+  }
+  function renderSummary(acc, rej, ed){
+    $("summary").innerHTML =
+      '<li><span>'+t("sumFile")+'</span><span class="fname">'+esc(file)+'</span></li>' +
+      '<li><span>'+t("sumApplied")+'</span><strong>'+acc+'</strong></li>' +
+      '<li><span>'+t("sumEdited")+'</span><strong>'+ed+'</strong></li>' +
+      '<li><span>'+t("sumRejected")+'</span><strong>'+rej+'</strong></li>';
+  }
+
+   $("dlBtn").addEventListener("click", function(){
+    var row = function(it){
+      var what = it.g === "alt" ? t("lImg",{i:it.i,p:it.p}) + ": " + it.text
+        : it.g === "rtl" ? t("lPage",{p:it.p}) + ": " + it.a.map(function(k){ return t("b_"+k); }).join(" › ")
+        : t("lTab",{i:it.i,p:it.p}) + ": " + t("tabLine",{h:it.h,c:it.c});
+      return "<tr><td>"+esc(what)+"<\/td><td>"+(it.st === "rejected" ? t("stRej") : it.ed ? t("stEd") : t("stAcc"))+"<\/td><\/tr>";
+    };
+    var html = '<!doctype html><html lang="'+lang+'" dir="'+(lang==="ar"?"rtl":"ltr")+'"><meta charset="utf-8"><title>WCAG report<\/title>'
+      + '<body style="font-family:system-ui,sans-serif;max-width:800px;margin:2rem auto;line-height:1.5">'
+      + '<h1>YUSR | يسر: WCAG report<\/h1><p>'+esc(file)+' · '+new Date().toLocaleDateString(lang==="ar"?"ar-SA":"en-GB")+'<\/p>'
+      + '<p>'+t("before")+': 38/100 — '+t("after")+': '+afterScore()+'/100<\/p>'
+      + '<table border="1" cellpadding="8" style="border-collapse:collapse;width:100%"><thead><tr><th scope="col">Fix<\/th><th scope="col">Status<\/th><\/tr><\/thead><tbody>'
+      + items.map(row).join("") + '<\/tbody><\/table><\/body><\/html>';
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([html], {type:"text/html"}));
+a.download = "YUSR-accessible-" + file.replace(/\.[^.]+$/, "") + ".html";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  document.querySelectorAll("[data-restart]").forEach(function(b){ b.addEventListener("click", function(){ editing = null; show("p-upload"); }); });
+
+  /* ---------- Upload ---------- */
+  document.querySelectorAll(".samples button").forEach(function(b){ b.addEventListener("click", function(){ startScan(b.dataset.file); }); });
+  $("fileInput").addEventListener("change", function(e){ if (e.target.files[0]) startScan(e.target.files[0].name); e.target.value = ""; });
+  var drop = $("drop");
+  ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function(e){ var f = e.dataTransfer.files[0]; if (f) startScan(f.name); });
+
+  /* ---------- Language ---------- */
+  function apply(){
+    var root = document.documentElement;
+    root.lang = lang; root.dir = lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(function(el){ el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll("[data-tpl]").forEach(function(el){ el.textContent = t(el.dataset.tpl); });
+    var lb = $("langBtn"); lb.textContent = t("langBtn"); lb.lang = t("langBtnLang");
+    document.title = t("docTitle");
+    if (!$("p-results").hidden) $("resTitle").textContent = t("resTitle",{n:items.length});
+    if (!$("p-review").hidden) renderReview();
+    if (!$("p-done").hidden) renderSummary(items.filter(function(i){return i.st==="accepted";}).length, items.filter(function(i){return i.st==="rejected";}).length, items.filter(function(i){return i.ed;}).length);
+  }
+  $("langBtn").addEventListener("click", function(){
+    lang = lang === "en" ? "ar" : "en";
+    try { localStorage.setItem("yusr-lang", lang); } catch(e){}
+    apply();
+  });
+
+  /* ---------- Logo fallback ---------- */
+  document.querySelectorAll(".slot img").forEach(function(img){
+    var s = img.closest(".slot");
+    function ok(){ if (img.naturalWidth > 0) s.classList.remove("empty"); }
+    if (img.complete) ok(); else img.addEventListener("load", ok);
+  });
+
+  apply();
+  document.querySelectorAll("#steps li")[0].className = "now";
+})();
+</script>
+</body>
+</html>

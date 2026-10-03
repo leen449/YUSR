@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YUSR | يسر — Arabic accessibility, automatically</title>
+<meta name="description" content="YUSR makes Arabic documents accessible automatically: Arabic alt-text, RTL reading order, accessible tables and WCAG reports. Coming soon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=EB+Garamond:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Noto+Naskh+Arabic:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ Tokens ============ */
+:root{
+  --bg:#d9d9d6; --raised:#ffffff; --ink:#1c2016; --ink-soft:#4e5248; --ink-muted:#7d8077;
+  --olive:#8f9c75; --olive-deep:#4a5d14; --olive-deep-hover:#3b4a0e; --on-olive:#ffffff;
+  --moss:#96a076; --sage:#86a395; --mist:#9eaea6; --khaki:#b4b59c; --card-ink:#2c3326;
+  --enterprise:#8aa597; --line:#3e4275; --brand:#1f5747; --rule:#c4c4bf; --pill:#ececea;
+  --btn-soft:#f3f1fb; --btn-soft-ink:#1c2016; --check:#2a2f5c;
+  --serif:"EB Garamond", Garamond, "Times New Roman", serif;
+  --sans:"DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1e19; --raised:#272a23; --ink:#ecede6; --ink-soft:#c4c7bc; --ink-muted:#9a9d92;
+    --olive:#66724f; --olive-deep:#5a7019; --olive-deep-hover:#6a8220; --on-olive:#ffffff;
+    --moss:#5d6748; --sage:#4f685c; --mist:#56645d; --khaki:#69695a; --card-ink:#eef0e8;
+    --enterprise:#4d6658; --line:#7e83bd; --brand:#8fc4b0; --rule:#3a3d35; --pill:#2b2e27;
+    --btn-soft:#33362e; --btn-soft-ink:#ecede6; --check:#aab0e8;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1e19; --raised:#272a23; --ink:#ecede6; --ink-soft:#c4c7bc; --ink-muted:#9a9d92;
+  --olive:#66724f; --olive-deep:#5a7019; --olive-deep-hover:#6a8220; --on-olive:#ffffff;
+  --moss:#5d6748; --sage:#4f685c; --mist:#56645d; --khaki:#69695a; --card-ink:#eef0e8;
+  --enterprise:#4d6658; --line:#7e83bd; --brand:#8fc4b0; --rule:#3a3d35; --pill:#2b2e27;
+  --btn-soft:#33362e; --btn-soft-ink:#ecede6; --check:#aab0e8;
+}
+html[lang="ar"]{
+  --serif:"Noto Naskh Arabic", "Amiri", "Times New Roman", serif;
+  --sans:"IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+html{ scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ transition:none !important; animation:none !important; } }
+*,*::before,*::after{ box-sizing:inherit; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:1rem; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+img,video,svg{ max-width:100%; display:block; }
+a{ color:inherit; }
+h1,h2,h3{ margin:0; font-weight:400; }
+p{ margin:0; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+:focus-visible{ outline:3px solid var(--olive-deep); outline-offset:3px; border-radius:6px; }
+.wrap{ width:min(1180px, 100% - 2.5rem); margin-inline:auto; }
+
+/* ============ Buttons ============ */
+.btn{ display:inline-flex; align-items:center; gap:.35rem; padding:.8rem 1.4rem; border-radius:999px; font:600 .95rem/1 var(--sans); text-decoration:none; border:0; cursor:pointer; white-space:nowrap; }
+.btn-primary{ background:var(--olive-deep); color:var(--on-olive); }
+.btn-primary:hover{ background:var(--olive-deep-hover); }
+.btn-ghost{ background:transparent; color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--ink); }
+.btn-ghost:hover{ background:color-mix(in srgb, var(--ink) 8%, transparent); }
+.btn-soft{ background:var(--btn-soft); color:var(--btn-soft-ink); width:100%; justify-content:center; padding:.95rem 1rem; }
+.btn-soft:hover{ background:color-mix(in srgb, var(--btn-soft) 80%, var(--olive)); }
+.ext{ width:.7em; height:.7em; }
+[dir="rtl"] .ext{ transform:scaleX(-1); }
+
+/* ============ Image slots (placeholders until real files exist) ============ */
+.slot{ position:relative; margin:0; overflow:hidden; }
+.slot img{ width:100%; height:100%; object-fit:cover; }
+.slot.empty{ background:repeating-linear-gradient(135deg, color-mix(in srgb,var(--ink) 7%,transparent) 0 12px, transparent 12px 24px), color-mix(in srgb,var(--raised) 55%,var(--bg)); }
+.slot.empty img{ opacity:0; }
+.slot.empty::after{ content:attr(data-label); position:absolute; inset:auto 0 0 0; padding:.6rem .8rem; font:500 .78rem/1.3 var(--sans); color:var(--ink-soft); direction:ltr; text-align:center; }
+
+/* ============ Header ============ */
+.site-header{ padding-block:1rem; }
+.site-header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.logo{ display:flex; align-items:center; text-decoration:none; }
+.logo .slot{ width:176px; height:64px; }
+.logo .slot img{ object-fit:contain; }
+.logo .slot.empty{ background:none; }
+.logo .slot.empty::after{ content:none; }
+.wordmark{ display:none; font:700 1.9rem/1 var(--sans); color:var(--brand); letter-spacing:.02em; gap:.4rem; align-items:baseline; }
+.wordmark span{ font-family:"IBM Plex Sans Arabic", sans-serif; }
+.logo .slot.empty + .wordmark{ display:flex; }
+.logo:has(.slot.empty) .slot{ display:none; }
+.nav-pill{ display:flex; gap:1.6rem; background:var(--pill); padding:.95rem 1.7rem; border-radius:999px; }
+.nav-pill a{ font-weight:600; font-size:.92rem; text-underline-offset:4px; }
+.header-actions{ display:flex; align-items:center; gap:.6rem; }
+.lang-btn{ font:600 .9rem/1 var(--sans); background:transparent; color:var(--ink); border:1.5px solid color-mix(in srgb,var(--ink) 35%,transparent); border-radius:999px; padding:.7rem 1rem; cursor:pointer; }
+.lang-btn:hover{ border-color:var(--ink); }
+#langBtn{ font-family:"IBM Plex Sans Arabic","DM Sans",sans-serif; }
+@media (max-width: 860px){ .nav-pill{ display:none; } }
+@media (max-width: 480px){ .header-actions .btn-primary{ display:none; } .logo .slot{ width:140px; height:52px; } }
+
+/* ============ Hero ============ */
+.hero{ display:grid; grid-template-columns:1.25fr 1fr; grid-template-areas:"visual text"; align-items:center; gap:1rem; padding-block:1rem 4rem; }
+.hero-visual{ grid-area:visual; position:relative; aspect-ratio:1/1; max-width:720px; width:100%; }
+.blob{ position:absolute; inset:0; width:100%; height:100%; }
+.blob path{ fill:var(--olive); }
+.hero-photo{ position:absolute; left:-2%; top:24%; width:64%; aspect-ratio:1.12/1; border-radius:0 0 62% 6% / 0 0 26% 6%; }
+.hero-text{ grid-area:text; display:flex; flex-direction:column; gap:1.3rem; max-width:34rem; }
+.badge{ align-self:flex-start; display:inline-flex; align-items:center; gap:.5rem; padding:.45rem .9rem; border-radius:999px; background:var(--raised); font-weight:600; font-size:.88rem; color:var(--olive-deep); }
+:root[data-theme="dark"] .badge{ color:var(--ink); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .badge{ color:var(--ink); } }
+.dot{ width:.55rem; height:.55rem; border-radius:50%; background:var(--olive-deep); box-shadow:0 0 0 0 color-mix(in srgb,var(--olive-deep) 60%,transparent); animation:pulse 2.4s ease-out infinite; }
+@keyframes pulse{ 70%{ box-shadow:0 0 0 .6rem transparent; } 100%{ box-shadow:0 0 0 0 transparent; } }
+.hero h1{ font-family:var(--serif); font-size:clamp(2.4rem, 4.6vw, 3.9rem); line-height:1.05; letter-spacing:-.01em; }
+html[lang="ar"] .hero h1{ line-height:1.35; letter-spacing:0; }
+.lede{ font-size:1.08rem; color:var(--ink-soft); max-width:32rem; }
+.actions{ display:flex; flex-wrap:wrap; gap:.7rem; }
+.fine{ font-size:.88rem; color:var(--ink-muted); }
+@media (max-width: 860px){
+  .hero{ grid-template-columns:1fr; grid-template-areas:"text" "visual"; padding-top:1.5rem; }
+  .hero-visual{ margin-inline:auto; }
+}
+@media (min-width: 861px){
+  [dir="rtl"] .hero{ grid-template-columns:1fr 1.25fr; grid-template-areas:"text visual"; }
+}
+
+/* ============ Features ============ */
+.features{ display:grid; grid-template-columns:1.1fr 1fr; gap:3rem; align-items:stretch; padding-block:4rem; }
+.features h2{ font-family:var(--serif); font-size:clamp(2rem,3.6vw,3rem); line-height:1.1; max-width:30rem; }
+html[lang="ar"] .features h2{ line-height:1.45; }
+.features-copy{ display:flex; flex-direction:column; gap:2.2rem; }
+.feature-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
+.feature{ display:flex; flex-direction:column; gap:.55rem; padding:1.4rem 1.3rem 1.3rem; border-radius:14px; text-decoration:none; color:var(--card-ink); min-height:13.5rem; position:relative; }
+.feature:hover{ filter:brightness(1.04); }
+.feature .ico{ width:3.4rem; height:3.4rem; margin-bottom:auto; color:var(--card-ink); }
+.feature h3{ font:700 1.02rem/1.3 var(--sans); padding-inline-end:1.6rem; }
+.feature p{ font-size:.88rem; line-height:1.45; opacity:.85; }
+.feature .arrow{ position:absolute; inset-inline-end:1.1rem; top:1.2rem; width:1rem; height:1rem; }
+[dir="rtl"] .feature .arrow{ transform:scaleX(-1); }
+.f-alt{ background:var(--moss); } .f-rtl{ background:var(--sage); } .f-tab{ background:var(--mist); } .f-wcag{ background:var(--khaki); }
+.team-photo{ border:2px solid #3b82f6; border-color:color-mix(in srgb, var(--olive-deep) 70%, transparent); min-height:520px; border-radius:4px; }
+@media (max-width: 860px){
+  .features{ grid-template-columns:1fr; }
+  .team-photo{ min-height:360px; order:-1; }
+}
+@media (max-width: 520px){ .feature-grid{ grid-template-columns:1fr; } .feature{ min-height:auto; } .feature .ico{ margin-bottom:.6rem; } }
+
+/* ============ Demo video ============ */
+.demo{ padding-block:3rem 4rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.9rem; }
+.demo h2{ font-family:var(--serif); font-size:clamp(2rem,3.6vw,3rem); line-height:1.1; }
+.demo > p{ color:var(--ink-soft); }
+.video-frame{ width:100%; max-width:900px; aspect-ratio:16/9; border-radius:18px; margin-top:1rem; background:#1a1c17; }
+.video-frame video{ width:100%; height:100%; object-fit:cover; background:#000; }
+.video-ph{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:.9rem; color:var(--ink-soft); font-weight:500; }
+.video-frame.empty video{ display:none; }
+.video-frame.empty .video-ph{ display:flex; }
+.video-frame.empty::after{ content:none; }
+.play{ width:4.2rem; height:4.2rem; border-radius:50%; background:var(--olive-deep); display:grid; place-items:center; }
+.play svg{ width:1.5rem; height:1.5rem; fill:#fff; margin-inline-start:.2rem; }
+[dir="rtl"] .play svg{ margin-inline-start:0; margin-inline-end:.2rem; transform:scaleX(-1); }
+
+/* ============ Pricing ============ */
+.pricing{ position:relative; padding-block:4rem 5rem; overflow:hidden; }
+.pricing .lines{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.pricing .lines path{ fill:none; stroke:var(--line); stroke-width:1.2; opacity:.7; }
+.pricing-head{ position:relative; text-align:center; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+.pricing h2{ font:700 clamp(1.8rem,3vw,2.3rem)/1.15 var(--sans); letter-spacing:-.01em; }
+.pricing-head > p{ color:var(--ink-muted); max-width:36rem; }
+.billing{ display:flex; align-items:center; gap:.9rem; margin-top:.6rem; font-size:.95rem; }
+.billing .opt{ color:var(--ink-muted); font-weight:500; }
+.billing .opt.on{ color:var(--ink); font-weight:700; }
+.switch{ width:3.3rem; height:1.75rem; border-radius:999px; border:0; background:var(--olive-deep); position:relative; cursor:pointer; padding:0; }
+.switch::after{ content:""; position:absolute; top:.25rem; inset-inline-start:.3rem; width:1.25rem; height:1.25rem; border-radius:50%; background:#c9cbc4; transition:inset-inline-start .2s ease; }
+.switch[aria-checked="true"]::after{ inset-inline-start:1.75rem; background:#fff; }
+.save{ font-size:.78rem; font-weight:700; color:var(--olive-deep); background:var(--raised); padding:.25rem .55rem; border-radius:999px; }
+.launch-note{ font-size:.85rem; color:var(--ink-muted); }
+.plans{ position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:1.6rem; margin-top:3.5rem; align-items:center; }
+.plan{ background:var(--raised); border-radius:18px; padding:1.6rem 1.4rem 1.4rem; display:flex; flex-direction:column; gap:1.1rem; min-height:22rem; }
+.plan h3{ font:700 1.45rem/1.2 var(--sans); color:var(--check); }
+.plan ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.7rem; font-size:.93rem; }
+.plan li{ display:flex; gap:.6rem; align-items:flex-start; color:var(--check); }
+.plan li svg{ flex:none; width:.85rem; height:.85rem; margin-top:.3rem; }
+.plan li.no{ color:var(--ink-muted); opacity:.75; }
+.price{ margin-top:auto; display:flex; align-items:baseline; gap:.35rem; flex-wrap:wrap; }
+.price strong{ font:700 1.5rem/1 var(--sans); color:var(--check); }
+.price span{ color:var(--ink-muted); font-size:.92rem; }
+.plan{ transition:background-color .25s ease, transform .25s ease; }
+.plan:hover, .plan:has(:focus-visible){ background:var(--enterprise); transform:translateY(-14px); }
+.plan:hover h3, .plan:hover li, .plan:hover .price strong, .plan:hover .price span,
+.plan:has(:focus-visible) h3, .plan:has(:focus-visible) li, .plan:has(:focus-visible) .price strong, .plan:has(:focus-visible) .price span{ color:#fff; opacity:1; }
+.plan:hover .btn-soft, .plan:has(:focus-visible) .btn-soft{ background:var(--olive-deep); color:var(--on-olive); }
+@media (max-width: 1060px){ .plans{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width: 580px){ .plans{ grid-template-columns:1fr; } .plan{ min-height:auto; } }
+
+/* ============ Connect (CTA form) ============ */
+.connect{ position:relative; isolation:isolate; padding:clamp(1.2rem,3vw,2rem); background:#202220; }
+.connect-bg{ position:absolute; inset:0; z-index:-2; }
+.connect-bg img{ filter:grayscale(1); }
+.connect-bg.empty{ background:linear-gradient(160deg,#3a3c38,#1b1c1a); }
+.connect-bg.empty::after{ color:#b8bab3; inset:auto auto 0 0; }
+.connect::before{ content:""; position:absolute; inset:0; z-index:-1; background:rgba(12,13,11,.62); }
+.connect-frame{ border:1px solid rgba(255,255,255,.75); padding:clamp(3rem,7vw,6rem) clamp(1.2rem,4vw,3rem); display:flex; flex-direction:column; align-items:center; text-align:center; gap:1.1rem; color:#fff; max-width:1100px; margin:6rem auto 3rem; }
+.connect h2{ font-family:var(--serif); font-size:clamp(2.3rem,4.4vw,3.4rem); line-height:1.1; }
+.connect-frame > p{ max-width:38rem; color:#e6e7e2; }
+form.cta{ width:100%; max-width:40rem; margin-top:1.4rem; display:flex; flex-direction:column; gap:1rem; }
+.intent{ border:0; padding:0; margin:0 0 .4rem; display:flex; justify-content:center; gap:1.2rem; flex-wrap:wrap; }
+.intent label{ position:relative; cursor:pointer; }
+.intent input{ position:absolute; opacity:0; inset:0; cursor:pointer; }
+.intent span{ display:inline-flex; align-items:center; gap:.35rem; padding:.85rem 1.6rem; border-radius:999px; font-weight:600; font-size:.95rem; background:transparent; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55); color:#fff; }
+.intent input:checked + span{ background:var(--olive-deep); box-shadow:none; }
+.intent input:focus-visible + span{ outline:3px solid #fff; outline-offset:3px; }
+.fields{ display:grid; grid-template-columns:1fr 1fr; gap:.8rem; text-align:start; }
+.field{ display:flex; flex-direction:column; gap:.35rem; }
+.field label{ font-size:.85rem; color:#e6e7e2; font-weight:500; }
+.field input, .field select{ font:400 1rem/1.3 var(--sans); padding:.8rem .9rem; border-radius:10px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.1); color:#fff; width:100%; }
+.field select option{ color:#1c2016; }
+.field input::placeholder{ color:rgba(255,255,255,.55); }
+.field input:focus, .field select:focus{ outline:none; border-color:#fff; background:rgba(255,255,255,.16); }
+.field[aria-invalid="true"] input{ border-color:#ffb4a8; }
+form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; margin-top:.4rem; }
+.form-msg{ min-height:1.5em; font-size:.95rem; }
+.form-msg.err{ color:#ffc9bf; }
+.form-done{ display:none; flex-direction:column; align-items:center; gap:.6rem; padding:1.4rem; }
+.form-done svg{ width:2.6rem; height:2.6rem; }
+.form-done p{ font-size:1.1rem; max-width:30rem; }
+.sent form.cta{ display:none; }
+.sent .form-done{ display:flex; }
+@media (max-width: 580px){ .fields{ grid-template-columns:1fr; } .connect-frame{ margin-block:2rem; } }
+
+/* ============ Footer ============ */
+.site-footer{ background:var(--raised); position:relative; overflow:hidden; padding-block:3rem 2rem; }
+.arc{ position:absolute; top:-140px; right:-140px; width:340px; height:340px; border-radius:50%; border:110px solid var(--olive-deep); pointer-events:none; }
+.foot-logo{ display:flex; justify-content:center; margin-bottom:3.5rem; position:relative; }
+.foot-logo .slot{ width:190px; height:72px; }
+.foot-logo .slot img{ object-fit:contain; }
+.foot-logo .slot.empty{ display:none; }
+.foot-logo .slot.empty + .wordmark{ display:flex; }
+.foot-cols{ display:grid; grid-template-columns:1fr 1fr 1.4fr; gap:2rem; position:relative; }
+.foot-cols h4{ margin:0 0 1.1rem; font:600 .95rem/1.2 var(--sans); }
+.foot-cols ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.85rem; font-size:.93rem; color:var(--ink-soft); }
+.foot-cols a{ text-decoration:none; }
+.foot-cols a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.contact-list li{ display:flex; gap:.75rem; align-items:flex-start; }
+.contact-list svg{ width:1.25rem; height:1.25rem; flex:none; color:var(--olive-deep); }
+.ltr{ direction:ltr; unicode-bidi:isolate; }
+.foot-bottom{ border-top:1px solid var(--rule); margin-top:3rem; padding-top:1.4rem; text-align:center; display:flex; flex-direction:column; gap:.7rem; align-items:center; font-size:.8rem; color:var(--ink-muted); }
+.socials{ display:flex; gap:1.3rem; }
+.socials a{ color:var(--ink); }
+.socials svg{ width:1.1rem; height:1.1rem; }
+@media (max-width: 720px){ .foot-cols{ grid-template-columns:1fr 1fr; } .foot-cols > div:last-child{ grid-column:1 / -1; } .arc{ width:220px; height:220px; border-width:70px; top:-100px; right:-100px; } }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="YUSR home">
+      <figure class="slot empty" data-label="images\Picture1.png"><img src="images\Picture1.png" alt="YUSR يسر"></figure>
+      <span class="wordmark">YUSR <span>يسر</span></span>
+    </a>
+    <nav class="nav-pill" aria-label="Main">
+      <a href="#home" data-i18n="navHome">Home</a>
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#pricing" data-i18n="navPricing">Pricing</a>
+      <a href="#contact" data-i18n="navContact">Contact Us</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-btn" id="langBtn" type="button" lang="ar">العربية</button>
+      <a class="btn btn-primary" href="#contact" data-intent="waitlist"><span data-i18n="ctaWaitlist">Join the waitlist</span><svg class="ext" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.5 2H8v4.5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ================= HERO ================= -->
+<section class="hero wrap" id="home">
+  <div class="hero-text">
+    <p class="badge"><span class="dot" aria-hidden="true"></span><span data-i18n="badge">Coming soon. Early access is open.</span></p>
+    <h1 data-i18n="heroTitle">Make Arabic content accessible. Automatically.</h1>
+    <p class="lede" data-i18n="heroSub">YUSR turns Arabic PDFs and course materials into accessible documents: Arabic alt-text for images, the right reading order for screen readers, accessible tables, and a WCAG compliance report.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact" data-intent="waitlist" data-i18n="ctaWaitlist">Join the waitlist</a>
+      <a class="btn btn-ghost" href="#demo" data-i18n="ctaWatch">Watch the demo</a>
+    </div>
+    <p class="fine" data-i18n="heroNote">Be among the first universities and agencies to try YUSR.</p>
+  </div>
+  <div class="hero-visual">
+    <svg class="blob" viewBox="0 0 1000 1000" aria-hidden="true"><path d="M500 30C545 30 565 70 588 125C650 290 710 350 875 412C925 432 970 455 970 500C970 545 925 568 875 588C710 650 650 710 588 875C565 930 545 970 500 970C455 970 435 930 412 875C350 710 290 650 125 588C75 568 30 545 30 500C30 455 75 432 125 412C290 350 350 290 412 125C435 70 455 30 500 30Z"/></svg>
+    <figure class="slot empty hero-photo" data-label="images\image 3.png"><img src="images\image 3.png" alt="A woman working on a laptop at her desk"></figure>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="features wrap" id="features">
+  <div class="features-copy">
+    <h2 data-i18n="featTitle">Everything you need for Arabic accessibility, in one place.</h2>
+    <div class="feature-grid">
+      <a class="feature f-alt" href="demo.html">
+<svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="38" height="32" rx="3"/><circle cx="16" cy="18" r="4"/><path d="M5 34l11-10 8 7 6-5 13 11"/></svg>        <h3 data-i18n="fAlt">Arabic alt-text generation</h3>
+        <p data-i18n="fAltD">Describes images and charts in clear Arabic for screen readers.</p>
+        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+      </a>
+      <a class="feature f-rtl" href="demo.html">
+        <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M42 16H8M16 8l-8 8 8 8"/><path d="M6 32h22M6 40h14"/><path d="M42 30v12"/></svg>
+        <h3 data-i18n="fRtl">RTL reading order fix</h3>
+        <p data-i18n="fRtlD">Puts text back in the order a screen reader should read it.</p>
+        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+      </a>
+      <a class="feature f-tab" href="demo.html">
+        <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="6" y="9" width="36" height="30" rx="2"/><path d="M6 17h36M6 25h36M6 32h36M18 9v30M30 9v30"/></svg>
+        <h3 data-i18n="fTab">Table accessibility</h3>
+        <p data-i18n="fTabD">Tags headers and cells so tables make sense when read aloud.</p>
+        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+      </a>
+      <a class="feature f-wcag" href="demo.html">
+<svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z"/><path d="M17 24l5 5 9-10"/></svg>      <h3 data-i18n="fWcag">WCAG compliance export</h3>
+        <p data-i18n="fWcagD">Download a report of what was fixed and what still needs review.</p>
+        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+      </a>
+    </div>
+  </div>
+  <figure class="slot empty team-photo" data-label="images\0fbf3a8ec93504df637d97f517fac46b.jpg"><img src="images\0fbf3a8ec93504df637d97f517fac46b.jpg" alt="A team working together on laptops around a table"></figure>
+</section>
+
+
+
+<!-- ================= PRICING ================= -->
+<section class="pricing" id="pricing">
+  <svg class="lines" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M110 0C210 60 170 160 140 240C110 330 160 380 260 430"/>
+    <path d="M720 0C860 70 1050 40 1200 90"/>
+    <path d="M0 640C60 700 110 760 140 800"/>
+    <path d="M530 560C640 600 760 620 1200 690"/>
+  </svg>
+  <div class="wrap">
+    <div class="pricing-head">
+      <h2 data-i18n="priceTitle">The Right Plan for Your Organization</h2>
+      <p data-i18n="priceSub">Flexible pricing built for institutions of all sizes, from universities remediating course materials to government agencies managing high-volume content.</p>
+      <div class="billing">
+        <span class="opt on" id="optMonthly" data-i18n="billMonthly">Bill monthly</span>
+        <button class="switch" id="billSwitch" type="button" role="switch" aria-checked="false" aria-labelledby="optAnnual"></button>
+        <span class="opt" id="optAnnual" data-i18n="billAnnual">Bill annually</span>
+        <span class="save" data-i18n="save">2 months free</span>
+      </div>
+      <p class="launch-note" data-i18n="launchNote">Launch pricing. Plans open when YUSR goes live.</p>
+    </div>
+
+    <div class="plans">
+      <article class="plan">
+        <h3 data-i18n="pStarter">Starter</h3>
+        <ul>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="docs50">Up to 50 documents/month</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tAlt">Arabic alt-text generation</span></li>
+          <li class="no"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1.6"/></svg><span data-i18n="tRtl">RTL reading order fix</span></li>
+          <li class="no"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1.6"/></svg><span data-i18n="tWcag">WCAG compliance report</span></li>
+        </ul>
+        <p class="price"><strong data-m="30" data-y="300">SAR 30</strong><span class="per" data-per="period">/month</span></p>
+        <a class="btn btn-soft" href="#contact" data-intent="waitlist" data-i18n="ctaWaitlist">Join the waitlist</a>
+      </article>
+
+      <article class="plan">
+        <h3 data-i18n="pPro">Professional</h3>
+        <ul>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="docs500">Up to 500 documents/month</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tAlt">Arabic alt-text generation</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tRtl">RTL reading order fix</span></li>
+          <li class="no"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1.6"/></svg><span data-i18n="tWcag">WCAG compliance report</span></li>
+        </ul>
+        <p class="price"><strong data-m="80" data-y="800">SAR 80</strong><span class="per" data-per="period">/month</span></p>
+        <a class="btn btn-soft" href="#contact" data-intent="waitlist" data-i18n="ctaWaitlist">Join the waitlist</a>
+      </article>
+
+      <article class="plan featured">
+        <h3 data-i18n="pEnt">Enterprise</h3>
+        <ul>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="docsUnl">Unlimited documents</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tAlt">Arabic alt-text generation</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tRtl">RTL reading order fix</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tWcag">WCAG compliance report</span></li>
+        </ul>
+        <p class="price"><span data-i18n="custom">Custom pricing</span></p>
+<a class="btn btn-soft" href="#contact" data-intent="demo" data-i18n="ctaDemo">Request a demo</a>      </article>
+
+      <article class="plan">
+        <h3 data-i18n="pPpd">Pay-Per-Document</h3>
+        <ul>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="noCommit">No monthly commitment</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tAlt">Arabic alt-text generation</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tRtl">RTL reading order fix</span></li>
+          <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tWcag">WCAG compliance report</span></li>
+        </ul>
+        <p class="price"><strong data-fixed="15">SAR 15</strong><span data-i18n="perDoc">/document</span></p>
+        <a class="btn btn-soft" href="#contact" data-intent="waitlist" data-i18n="ctaWaitlist">Join the waitlist</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONNECT / CTA ================= -->
+<section class="connect" id="contact">
+  <figure class="slot empty connect-bg" data-label="images\image 5.png"><img src="images\image 5.png" alt=""></figure>
+  <div class="connect-frame" id="connectFrame">
+    <h2 data-i18n="connTitle">Connect with us</h2>
+    <p data-i18n="connSub">Schedule a quick call to see how YUSR can transform your organization's digital accessibility workflow, no technical expertise required.</p>
+
+    <form class="cta" id="join" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <input type="hidden" name="form-name" value="waitlist">
+      <p hidden><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <fieldset class="intent">
+        <legend class="sr-only" data-i18n="intentLegend">What would you like to do?</legend>
+        <label><input type="radio" name="intent" value="waitlist" checked><span data-i18n="intentWait">Join the waitlist</span></label>
+        <label><input type="radio" name="intent" value="demo"><span data-i18n="ctaDemo">Request a demo</span></label>
+      </fieldset>
+      <div class="fields">
+        <div class="field"><label for="fName" data-i18n="fName">Full name</label><input id="fName" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="fEmail" data-i18n="fEmail">Work email</label><input id="fEmail" name="email" type="email" autocomplete="email" required dir="ltr"></div>
+        <div class="field"><label for="fOrg" data-i18n="fOrg">Organization</label><input id="fOrg" name="organization" autocomplete="organization" required></div>
+        <div class="field"><label for="fType" data-i18n="fType">Organization type</label>
+          <select id="fType" name="type">
+            <option value="university" data-i18n="tUni">University</option>
+            <option value="government" data-i18n="tGov">Government agency</option>
+            <option value="company" data-i18n="tCo">Company</option>
+            <option value="other" data-i18n="tOther">Other</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit" id="submitBtn" data-i18n="ctaWaitlist">Join the waitlist</button>
+      <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="form-done" role="status" aria-live="polite">
+      <svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.4" aria-hidden="true"><circle cx="20" cy="20" r="18"/><path d="M12 20.5l5.5 5.5L28.5 14"/></svg>
+      <p id="doneMsg"></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="arc" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="foot-logo">
+      <figure class="slot empty" data-label="images\Picture1.png"><img src="images\Picture1.png" alt="YUSR يسر"></figure>
+      <span class="wordmark">YUSR <span>يسر</span></span>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <h4>YUSR | يسر</h4>
+        <ul>
+          <li><a href="#home" data-i18n="navHome">Home</a></li>
+          <li><a href="#features" data-i18n="navFeatures">Features</a></li>
+          <li><a href="#pricing" data-i18n="navPricing">Pricing</a></li>
+          <li><a href="#contact" data-i18n="navContact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="legal">Legal</h4>
+        <ul>
+          <li><a href="#" data-i18n="privacy">Privacy Policy</a></li>
+          <li><a href="#" data-i18n="terms">Terms of Service</a></li>
+          <li><a href="#" data-i18n="cookies">Cookie Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="contactH">Contact</h4>
+        <ul class="contact-list">
+          <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span class="ltr">123 456 789</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3.5 20.5l1.3-4A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.5-2-1-1 .8a5 5 0 0 1-2.8-2.8l.8-1-1-2z" stroke-width="1.4"/></svg><a href="#" data-i18n="whatsapp">WhatsApp</a></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg><a class="ltr" href="mailto:contact@yusr.com">contact@yusr.com</a></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><span data-i18n="days">Sunday – Thursday</span><br><span data-i18n="hours">9:00 AM – 5:00 PM</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="socials">
+        <a href="#" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.8 3h3.1l-6.8 7.8 8 10.2h-6.3l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.9zm-1.1 16.2h1.7L7.3 4.7H5.5z"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM3 8.5h3V21H3zM9 8.5h2.9v1.7c.5-.9 1.7-2 3.6-2 3.8 0 4.5 2.4 4.5 5.6V21h-3v-6.4c0-1.5 0-3.5-2.1-3.5S12 12.8 12 14.5V21H9z"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.8c0-.9.3-1.5 1.6-1.5h1.7V3.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.5V13h2.7v8z"/></svg></a>
+      </div>
+      <p data-i18n="copy">© 2026 YUSR. All rights reserved.</p>
+      <p data-i18n="ksu">King Saud University, IT Entrepreneurship &amp; Innovation.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Translations ---------- */
+  var T = {
+    en:{
+      navHome:"Home", navFeatures:"Features", navPricing:"Pricing", navContact:"Contact Us",
+      ctaWaitlist:"Join the waitlist", ctaWatch:"Watch the demo", ctaDemo:"Request a demo",
+      badge:"Coming soon. Early access is open.",
+      heroTitle:"Make Arabic content accessible. Automatically.",
+      heroSub:"YUSR turns Arabic PDFs and course materials into accessible documents: Arabic alt-text for images, the right reading order for screen readers, accessible tables, and a WCAG compliance report.",
+      heroNote:"Be among the first universities and agencies to try YUSR.",
+      featTitle:"Everything you need for Arabic accessibility, in one place.",
+      fAlt:"Arabic alt-text generation", fAltD:"Describes images and charts in clear Arabic for screen readers.",
+      fRtl:"RTL reading order fix", fRtlD:"Puts text back in the order a screen reader should read it.",
+      fTab:"Table accessibility", fTabD:"Tags headers and cells so tables make sense when read aloud.",
+      fWcag:"WCAG compliance export", fWcagD:"Download a report of what was fixed and what still needs review.",
+      demoTitle:"See YUSR in action", demoSub:"A one-minute walkthrough of how YUSR fixes an Arabic document.", demoPh:"Demo video coming soon",
+      priceTitle:"The Right Plan for Your Organization",
+      priceSub:"Flexible pricing built for institutions of all sizes, from universities remediating course materials to government agencies managing high-volume content.",
+      billMonthly:"Bill monthly", billAnnual:"Bill annually", save:"2 months free",
+      launchNote:"Launch pricing. Plans open when YUSR goes live.",
+      pStarter:"Starter", pPro:"Professional", pEnt:"Enterprise", pPpd:"Pay-Per-Document",
+      docs50:"Up to 50 documents/month", docs500:"Up to 500 documents/month", docsUnl:"Unlimited documents", noCommit:"No monthly commitment",
+      tAlt:"Arabic alt-text generation", tRtl:"RTL reading order fix", tWcag:"WCAG compliance report",
+      custom:"Custom pricing", perDoc:"/document", perMonth:"/month", perYear:"/year", sar:"SAR",
+      connTitle:"Connect with us",
+      connSub:"Schedule a quick call to see how YUSR can transform your organization's digital accessibility workflow, no technical expertise required.",
+      intentLegend:"What would you like to do?", intentWait:"Join the waitlist",
+      fName:"Full name", fEmail:"Work email", fOrg:"Organization", fType:"Organization type",
+      tUni:"University", tGov:"Government agency", tCo:"Company", tOther:"Other",
+      errFields:"Fill in your name, a valid work email, and your organization.",
+      doneWait:"You're on the list. We'll email you when YUSR launches.",
+      doneDemo:"Request received. We'll email you to schedule your demo.",
+      legal:"Legal", privacy:"Privacy Policy", terms:"Terms of Service", cookies:"Cookie Policy",
+      contactH:"Contact", whatsapp:"WhatsApp", days:"Sunday – Thursday", hours:"9:00 AM – 5:00 PM",
+      copy:"© 2026 YUSR. All rights reserved.", ksu:"King Saud University, IT Entrepreneurship & Innovation.",
+      langBtn:"العربية", langBtnLang:"ar", title:"YUSR | يسر — Arabic accessibility, automatically"
+    },
+    ar:{
+      navHome:"الرئيسية", navFeatures:"المزايا", navPricing:"الأسعار", navContact:"تواصل معنا",
+      ctaWaitlist:"انضم لقائمة الانتظار", ctaWatch:"شاهد العرض", ctaDemo:"اطلب عرضًا توضيحيًا",
+      badge:"قريبًا. التسجيل المبكر متاح الآن.",
+      heroTitle:"اجعل المحتوى العربي متاحًا للجميع. تلقائيًا.",
+      heroSub:"يحوّل يسر ملفات PDF والمواد التعليمية العربية إلى مستندات ميسّرة: نص بديل عربي للصور، وترتيب قراءة صحيح لقارئات الشاشة، وجداول ميسّرة، وتقرير امتثال لمعايير WCAG.",
+      heroNote:"كن من أوائل الجامعات والجهات التي تجرّب يسر.",
+      featTitle:"كل ما تحتاجه لإتاحة المحتوى العربي، في مكان واحد.",
+      fAlt:"توليد النص البديل بالعربية", fAltD:"يصف الصور والرسوم البيانية بلغة عربية واضحة لقارئات الشاشة.",
+      fRtl:"تصحيح ترتيب القراءة من اليمين إلى اليسار", fRtlD:"يعيد ترتيب النص كما يجب أن تقرأه قارئات الشاشة.",
+      fTab:"إتاحة الجداول", fTabD:"يضيف وسوم الرؤوس والخلايا لتكون الجداول مفهومة عند قراءتها صوتيًا.",
+      fWcag:"تصدير تقرير الامتثال لـ WCAG", fWcagD:"نزّل تقريرًا يوضح ما تم إصلاحه وما يحتاج إلى مراجعة.",
+      demoTitle:"شاهد يسر أثناء العمل", demoSub:"جولة مدتها دقيقة واحدة توضح كيف يعالج يسر مستندًا عربيًا.", demoPh:"العرض التوضيحي قريبًا",
+      priceTitle:"الخطة المناسبة لمؤسستك",
+      priceSub:"أسعار مرنة لمؤسسات بجميع الأحجام، من الجامعات التي تعالج موادها التعليمية إلى الجهات الحكومية التي تدير محتوى بكميات كبيرة.",
+      billMonthly:"الدفع شهريًا", billAnnual:"الدفع سنويًا", save:"شهران مجانًا",
+      launchNote:"أسعار الإطلاق. تتوفر الخطط عند إطلاق يسر.",
+      pStarter:"الأساسية", pPro:"الاحترافية", pEnt:"المؤسسات", pPpd:"الدفع لكل مستند",
+      docs50:"حتى 50 مستندًا شهريًا", docs500:"حتى 500 مستند شهريًا", docsUnl:"مستندات غير محدودة", noCommit:"بدون التزام شهري",
+      tAlt:"توليد النص البديل بالعربية", tRtl:"تصحيح ترتيب القراءة", tWcag:"تقرير الامتثال لـ WCAG",
+      custom:"تسعير مخصص", perDoc:"/ للمستند", perMonth:"/ شهريًا", perYear:"/ سنويًا", sar:"ر.س",
+      connTitle:"تواصل معنا",
+      connSub:"احجز مكالمة قصيرة لترى كيف يمكن ليسر أن يطوّر سير عمل الإتاحة الرقمية في مؤسستك، دون الحاجة إلى خبرة تقنية.",
+      intentLegend:"ماذا تريد أن تفعل؟", intentWait:"الانضمام لقائمة الانتظار",
+      fName:"الاسم الكامل", fEmail:"البريد الإلكتروني للعمل", fOrg:"الجهة", fType:"نوع الجهة",
+      tUni:"جامعة", tGov:"جهة حكومية", tCo:"شركة", tOther:"أخرى",
+      errFields:"أدخل اسمك وبريدًا إلكترونيًا صحيحًا واسم جهتك.",
+      doneWait:"تمت إضافتك إلى القائمة. سنراسلك عند إطلاق يسر.",
+      doneDemo:"تم استلام طلبك. سنراسلك لتحديد موعد العرض التوضيحي.",
+      legal:"قانوني", privacy:"سياسة الخصوصية", terms:"شروط الخدمة", cookies:"سياسة ملفات تعريف الارتباط",
+      contactH:"التواصل", whatsapp:"واتساب", days:"الأحد – الخميس", hours:"9:00 ص – 5:00 م",
+      copy:"© 2026 يسر. جميع الحقوق محفوظة.", ksu:"جامعة الملك سعود، ريادة الأعمال والابتكار في تقنية المعلومات.",
+      langBtn:"English", langBtnLang:"en", title:"يسر | YUSR — إتاحة المحتوى العربي تلقائيًا"
+    }
+  };
+
+  var lang = "en", annual = false, done = null;
+  try { var saved = localStorage.getItem("yusr-lang"); if (saved === "ar" || saved === "en") lang = saved; } catch(e){}
+
+  function t(k){ return (T[lang] && T[lang][k]) || T.en[k] || ""; }
+
+  function renderPrices(){
+    document.querySelectorAll(".price strong[data-m]").forEach(function(el){
+      var v = annual ? el.dataset.y : el.dataset.m;
+      el.textContent = lang === "ar" ? v + " " + t("sar") : t("sar") + " " + v;
+    });
+    document.querySelectorAll(".price strong[data-fixed]").forEach(function(el){
+      var v = el.dataset.fixed;
+      el.textContent = lang === "ar" ? v + " " + t("sar") : t("sar") + " " + v;
+    });
+    document.querySelectorAll('[data-per="period"]').forEach(function(el){
+      el.textContent = annual ? t("perYear") : t("perMonth");
+    });
+    document.getElementById("optMonthly").classList.toggle("on", !annual);
+    document.getElementById("optAnnual").classList.toggle("on", annual);
+    document.getElementById("billSwitch").setAttribute("aria-checked", String(annual));
+  }
+
+  function currentIntent(){
+    var r = document.querySelector('input[name="intent"]:checked');
+    return r ? r.value : "waitlist";
+  }
+  function renderSubmit(){
+    document.getElementById("submitBtn").textContent = currentIntent() === "demo" ? t("ctaDemo") : t("ctaWaitlist");
+  }
+
+  function apply(){
+    var root = document.documentElement;
+    root.lang = lang; root.dir = lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      if (el.id === "submitBtn") return;
+      el.textContent = t(el.dataset.i18n);
+    });
+    var lb = document.getElementById("langBtn");
+    lb.textContent = t("langBtn"); lb.lang = t("langBtnLang");
+    lb.setAttribute("aria-label", lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
+    document.title = t("title");
+    renderPrices(); renderSubmit();
+    if (done) document.getElementById("doneMsg").textContent = t(done);
+    var msg = document.getElementById("formMsg");
+    if (msg.classList.contains("err")) msg.textContent = t("errFields");
+  }
+
+  document.getElementById("langBtn").addEventListener("click", function(){
+    lang = lang === "en" ? "ar" : "en";
+    try { localStorage.setItem("yusr-lang", lang); } catch(e){}
+    apply();
+  });
+
+  document.getElementById("billSwitch").addEventListener("click", function(){ annual = !annual; renderPrices(); });
+
+  /* ---------- CTA links preselect the form intent ---------- */
+  document.querySelectorAll("[data-intent]").forEach(function(a){
+    a.addEventListener("click", function(){
+      var r = document.querySelector('input[name="intent"][value="' + a.dataset.intent + '"]');
+      if (r) { r.checked = true; renderSubmit(); }
+    });
+  });
+  document.querySelectorAll('input[name="intent"]').forEach(function(r){ r.addEventListener("change", renderSubmit); });
+
+  /* ---------- Form ---------- */
+  var form = document.getElementById("join");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = form.name.value.trim(), email = form.email.value.trim(), org = form.organization.value.trim();
+    var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    [["fName", !!name], ["fEmail", okEmail], ["fOrg", !!org]].forEach(function(p){
+      document.getElementById(p[0]).parentElement.setAttribute("aria-invalid", p[1] ? "false" : "true");
+    });
+    var msg = document.getElementById("formMsg");
+    if (!name || !okEmail || !org) {
+      msg.textContent = t("errFields"); msg.classList.add("err");
+      (!name ? form.name : !okEmail ? form.email : form.organization).focus();
+      return;
+    }
+    msg.textContent = ""; msg.classList.remove("err");
+    // When hosted on Netlify, this posts the signup to Netlify Forms. Elsewhere it fails quietly.
+    try {
+      var body = new URLSearchParams(new FormData(form)).toString();
+      fetch("/", { method:"POST", headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body: body }).catch(function(){});
+    } catch(err){}
+    done = currentIntent() === "demo" ? "doneDemo" : "doneWait";
+    document.getElementById("doneMsg").textContent = t(done);
+    document.getElementById("connectFrame").classList.add("sent");
+  });
+
+  /* ---------- Image & video slots: show the file if it exists, else a labelled placeholder ---------- */
+  document.querySelectorAll(".slot img").forEach(function(img){
+    var slot = img.closest(".slot");
+    function ok(){ if (img.naturalWidth > 0) slot.classList.remove("empty"); }
+    if (img.complete) ok(); else img.addEventListener("load", ok);
+  });
+  var vid = document.querySelector(".video-frame video");
+  if (vid) {
+    var vslot = vid.closest(".slot");
+    if (vid.readyState >= 1) vslot.classList.remove("empty");
+    vid.addEventListener("loadedmetadata", function(){ vslot.classList.remove("empty"); });
+  }
+
+  apply();
+})();
+</script>
+</body>
+</html>
