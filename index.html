@@ -108,7 +108,7 @@ p{ margin:0; }
 .hero h1{ font-family:var(--serif); font-size:clamp(2.4rem, 4.6vw, 3.9rem); line-height:1.05; letter-spacing:-.01em; }
 html[lang="ar"] .hero h1{ line-height:1.35; letter-spacing:0; }
 .lede{ font-size:1.08rem; color:var(--ink-soft); max-width:32rem; }
-.actions{ display:flex; flex-wrap:wrap; gap:.7rem; }
+.actions{ display:flex; flex-wrap:wrap; gap:.7rem; justify-content:center; }
 .fine{ font-size:.88rem; color:var(--ink-muted); }
 @media (max-width: 860px){
   .hero{ grid-template-columns:1fr; grid-template-areas:"text" "visual"; padding-top:1.5rem; }
@@ -274,8 +274,6 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
     <h1 data-i18n="heroTitle">Make Arabic content accessible. Automatically.</h1>
     <p class="lede" data-i18n="heroSub">YUSR turns Arabic PDFs and course materials into accessible documents: Arabic alt-text for images, the right reading order for screen readers, accessible tables, and a WCAG compliance report.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="#contact" data-intent="waitlist" data-i18n="ctaWaitlist">Join the waitlist</a>
-      <a class="btn btn-ghost" href="#demo" data-i18n="ctaWatch">Watch the demo</a>
     </div>
     <p class="fine" data-i18n="heroNote">Be among the first universities and agencies to try YUSR.</p>
   </div>
