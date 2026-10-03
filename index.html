@@ -143,13 +143,13 @@ html[lang="ar"] .features h2{ line-height:1.45; }
 .demo{ padding-block:3rem 4rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.9rem; }
 .demo h2{ font-family:var(--serif); font-size:clamp(2rem,3.6vw,3rem); line-height:1.1; }
 .demo > p{ color:var(--ink-soft); }
-.video-frame{ width:100%; max-width:900px; aspect-ratio:16/9; border-radius:18px; margin-top:1rem; background:#1a1c17; }
-.video-frame video{ width:100%; height:100%; object-fit:cover; background:#000; }
+.video-frame{ width:100%; max-width:900px; border-radius:18px; margin-top:1rem; }
+.video-frame video{ width:100%; height:auto; background:transparent; }
 .video-ph{ position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:.9rem; color:var(--ink-soft); font-weight:500; }
 .video-frame.empty video{ display:none; }
 .video-frame.empty .video-ph{ display:flex; }
 .video-frame.empty::after{ content:none; }
-.play{ width:4.2rem; height:4.2rem; border-radius:50%; background:var(--olive-deep); display:grid; place-items:center; }
+.play{ width:4.2rem; height:3.2rem; border-radius:50%; background:var(--olive-deep); display:grid; place-items:center; }
 .play svg{ width:1.5rem; height:1.5rem; fill:#fff; margin-inline-start:.2rem; }
 [dir="rtl"] .play svg{ margin-inline-start:0; margin-inline-end:.2rem; transform:scaleX(-1); }
 
@@ -319,8 +319,8 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 <section class="demo wrap" id="demo">
   <h2 data-i18n="demoTitle">See YUSR in action</h2>
   <p data-i18n="demoSub">A one-minute walkthrough of how YUSR fixes an Arabic document.</p>
-  <div class="slot empty video-frame" data-label="media/yusr-demo.mp4">
-    <video controls preload="metadata" playsinline src="media/yusr-demo.mp4"></video>
+  <div class="slot empty video-frame" data-label="media\IMG_3728.MOV">
+    <video controls preload="metadata" playsinline src="media\document_5911073557164596696.mp4"></video>
     <div class="video-ph">
       <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>
       <span data-i18n="demoPh">Demo video coming soon</span>
@@ -643,7 +643,7 @@ heroSub:"يسر منصة إتاحة رقمية بالذكاء الاصطناعي
       return;
     }
     msg.textContent = ""; msg.classList.remove("err");
-    // When hosted on Netlify, this posts the signup to Netlify Forms. Elsewhere it fails quietly.
+    // When hosted on formspree, this posts the signup to formspree Forms. Elsewhere it fails quietly.
        try {
       fetch("https://formspree.io/f/mwlpgayn", { method:"POST", headers:{ "Accept":"application/json" }, body: new FormData(form) }).catch(function(){});
     } catch(err){}
