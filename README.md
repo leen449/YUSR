@@ -82,6 +82,8 @@ A walkthrough of the product flow using sample results:
 - HTML, CSS and vanilla JavaScript, with no frameworks or build step
 - Google Fonts: DM Sans, EB Garamond, IBM Plex Sans Arabic, Noto Naskh Arabic
 - Figma for the original design
+- GitHub Pages for hosting
+- Formspree for waitlist and demo-request submissions
 
 The site follows the accessibility practices it promotes: semantic HTML, keyboard navigation with visible focus, `lang`/`dir` switching for Arabic, reduced-motion support, and light/dark themes.
 

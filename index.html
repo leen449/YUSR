@@ -315,6 +315,18 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
   <figure class="slot empty team-photo" data-label="images\0fbf3a8ec93504df637d97f517fac46b.jpg"><img src="images\0fbf3a8ec93504df637d97f517fac46b.jpg" alt="A team working together on laptops around a table"></figure>
 </section>
 
+<!-- ================= DEMO VIDEO ================= -->
+<section class="demo wrap" id="demo">
+  <h2 data-i18n="demoTitle">See YUSR in action</h2>
+  <p data-i18n="demoSub">A one-minute walkthrough of how YUSR fixes an Arabic document.</p>
+  <div class="slot empty video-frame" data-label="media/yusr-demo.mp4">
+    <video controls preload="metadata" playsinline src="media/yusr-demo.mp4"></video>
+    <div class="video-ph">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>
+      <span data-i18n="demoPh">Demo video coming soon</span>
+    </div>
+  </div>
+</section>
 
 
 <!-- ================= PRICING ================= -->
@@ -483,7 +495,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
   var T = {
     en:{
       navHome:"Home", navFeatures:"Features", navPricing:"Pricing", navContact:"Contact Us",
-      ctaWaitlist:"Join the waitlist", ctaWatch:"Watch the demo", ctaDemo:"Request a demo",
+      ctaWaitlist:"Join the waitlist", ctaWatch:"Watch the demo", ctaDemo:"Book a call",
       badge:"Coming soon. Early access is open.",
       heroTitle:"Make Arabic content accessible. Automatically.",
       heroSub:"YUSR turns Arabic PDFs and course materials into accessible documents: Arabic alt-text for images, the right reading order for screen readers, accessible tables, and a WCAG compliance report.",
@@ -509,7 +521,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
       tUni:"University", tGov:"Government agency", tCo:"Company", tOther:"Other",
       errFields:"Fill in your name, a valid work email, and your organization.",
       doneWait:"You're on the list. We'll email you when YUSR launches.",
-      doneDemo:"Request received. We'll email you to schedule your demo.",
+      doneDemo:"Request received. We'll email you to schedule your call.",
       legal:"Legal", privacy:"Privacy Policy", terms:"Terms of Service", cookies:"Cookie Policy",
       contactH:"Contact", whatsapp:"WhatsApp", days:"Sunday – Thursday", hours:"9:00 AM – 5:00 PM",
       copy:"© 2026 YUSR. All rights reserved.", ksu:"King Saud University, IT Entrepreneurship & Innovation.",
@@ -517,7 +529,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
     },
     ar:{
       navHome:"الرئيسية", navFeatures:"المزايا", navPricing:"الأسعار", navContact:"تواصل معنا",
-      ctaWaitlist:"انضم لقائمة الانتظار", ctaWatch:"شاهد العرض", ctaDemo:"اطلب عرضًا توضيحيًا",
+      ctaWaitlist:"انضم لقائمة الانتظار", ctaWatch:"شاهد العرض", ctaDemo:"احجز مكالمة",
       badge:"قريبًا. التسجيل المبكر متاح الآن.",
       heroTitle:"اجعل المحتوى العربي متاحًا للجميع. تلقائيًا.",
       heroSub:"يحوّل يسر ملفات PDF والمواد التعليمية العربية إلى مستندات ميسّرة: نص بديل عربي للصور، وترتيب قراءة صحيح لقارئات الشاشة، وجداول ميسّرة، وتقرير امتثال لمعايير WCAG.",
@@ -543,7 +555,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
       tUni:"جامعة", tGov:"جهة حكومية", tCo:"شركة", tOther:"أخرى",
       errFields:"أدخل اسمك وبريدًا إلكترونيًا صحيحًا واسم جهتك.",
       doneWait:"تمت إضافتك إلى القائمة. سنراسلك عند إطلاق يسر.",
-      doneDemo:"تم استلام طلبك. سنراسلك لتحديد موعد العرض التوضيحي.",
+     doneDemo:"تم استلام طلبك. سنراسلك لتحديد موعد المكالمة.",
       legal:"قانوني", privacy:"سياسة الخصوصية", terms:"شروط الخدمة", cookies:"سياسة ملفات تعريف الارتباط",
       contactH:"التواصل", whatsapp:"واتساب", days:"الأحد – الخميس", hours:"9:00 ص – 5:00 م",
       copy:"© 2026 يسر. جميع الحقوق محفوظة.", ksu:"جامعة الملك سعود، ريادة الأعمال والابتكار في تقنية المعلومات.",
@@ -632,9 +644,8 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
     }
     msg.textContent = ""; msg.classList.remove("err");
     // When hosted on Netlify, this posts the signup to Netlify Forms. Elsewhere it fails quietly.
-    try {
-      var body = new URLSearchParams(new FormData(form)).toString();
-      fetch("/", { method:"POST", headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body: body }).catch(function(){});
+       try {
+      fetch("https://formspree.io/f/mwlpgayn", { method:"POST", headers:{ "Accept":"application/json" }, body: new FormData(form) }).catch(function(){});
     } catch(err){}
     done = currentIntent() === "demo" ? "doneDemo" : "doneWait";
     document.getElementById("doneMsg").textContent = t(done);
