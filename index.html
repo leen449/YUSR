@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
+  <script>document.documentElement.classList.add('js');</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KSE9LSPR2H"></script>
   <script>
@@ -239,6 +240,16 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 .ltr{ direction:ltr; unicode-bidi:isolate; }
 .foot-bottom{ border-top:1px solid var(--rule); margin-top:3rem; padding-top:1.4rem; text-align:center; display:flex; flex-direction:column; gap:.7rem; align-items:center; font-size:.8rem; color:var(--ink-muted); }
 @media (max-width: 720px){ .arc{ width:220px; height:220px; border-width:70px; top:-100px; right:-100px; } }
+
+/* ============ Scroll reveal ============ */
+.js .reveal{ opacity:0; transform:translateY(32px); transition:opacity .8s cubic-bezier(.16,.8,.3,1), transform .8s cubic-bezier(.16,.8,.3,1); }
+.js .reveal.is-visible{ opacity:1; transform:translateY(0); }
+.js .reveal-stagger > *{ opacity:0; transform:translateY(32px); transition:opacity .7s cubic-bezier(.16,.8,.3,1), transform .7s cubic-bezier(.16,.8,.3,1); }
+.js .reveal-stagger.is-visible > *{ opacity:1; transform:translateY(0); }
+.js .reveal-stagger > *:nth-child(1){ transition-delay:.05s; }
+.js .reveal-stagger > *:nth-child(2){ transition-delay:.13s; }
+.js .reveal-stagger > *:nth-child(3){ transition-delay:.21s; }
+.js .reveal-stagger > *:nth-child(4){ transition-delay:.29s; }
 </style>
 </head>
 <body>
@@ -259,7 +270,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 <main>
 <!-- ================= HERO ================= -->
 <section class="hero wrap" id="home">
-  <div class="hero-text">
+  <div class="hero-text reveal">
     <p class="badge"><span class="dot" aria-hidden="true"></span><span data-i18n="badge">Coming soon. Early access is open.</span></p>
     <h1 data-i18n="heroTitle">Make Arabic content accessible. Automatically.</h1>
     <p class="lede" data-i18n="heroSub">YUSR turns Arabic PDFs and course materials into accessible documents: Arabic alt-text for images, the right reading order for screen readers, accessible tables, and a WCAG compliance report.</p>
@@ -268,7 +279,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
     </div>
     <p class="fine" data-i18n="heroNote">Be among the first universities and agencies to try YUSR.</p>
   </div>
-  <div class="hero-visual">
+  <div class="hero-visual reveal" style="transition-delay:.12s">
     <svg class="blob" viewBox="0 0 1000 1000" aria-hidden="true"><path d="M500 30C545 30 565 70 588 125C650 290 710 350 875 412C925 432 970 455 970 500C970 545 925 568 875 588C710 650 650 710 588 875C565 930 545 970 500 970C455 970 435 930 412 875C350 710 290 650 125 588C75 568 30 545 30 500C30 455 75 432 125 412C290 350 350 290 412 125C435 70 455 30 500 30Z"/></svg>
     <figure class="slot empty hero-photo" data-label="images\image 3.png"><img src="images\image 3.png" alt="A woman working on a laptop at her desk"></figure>
   </div>
@@ -277,8 +288,8 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 <!-- ================= FEATURES ================= -->
 <section class="features wrap" id="features">
   <div class="features-copy">
-    <h2 data-i18n="featTitle">Everything you need for Arabic accessibility, in one place.</h2>
-    <div class="feature-grid">
+    <h2 class="reveal" data-i18n="featTitle">Everything you need for Arabic accessibility, in one place.</h2>
+    <div class="feature-grid reveal-stagger">
       <div class="feature f-alt">
 <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="38" height="32" rx="3"/><circle cx="16" cy="18" r="4"/><path d="M5 34l11-10 8 7 6-5 13 11"/></svg>        <h3 data-i18n="fAlt">Arabic alt-text generation</h3>
         <p data-i18n="fAltD">Describes images and charts in clear Arabic for screen readers.</p>
@@ -299,14 +310,14 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
       </div>
     </div>
   </div>
-  <figure class="slot empty team-photo" data-label="images\0fbf3a8ec93504df637d97f517fac46b.jpg"><img src="images\0fbf3a8ec93504df637d97f517fac46b.jpg" alt="A team working together on laptops around a table"></figure>
+  <figure class="slot empty team-photo reveal" data-label="images\0fbf3a8ec93504df637d97f517fac46b.jpg"><img src="images\0fbf3a8ec93504df637d97f517fac46b.jpg" alt="A team working together on laptops around a table"></figure>
 </section>
 
 <!-- ================= DEMO VIDEO ================= -->
 <section class="demo wrap" id="demo">
-  <h2 data-i18n="demoTitle">See YUSR in action</h2>
-  <p data-i18n="demoSub">A one-minute walkthrough of how YUSR fixes an Arabic document.</p>
-  <div class="slot video-frame" data-label="media\IMG_3728.MOV">
+  <h2 class="reveal" data-i18n="demoTitle">See YUSR in action</h2>
+  <p class="reveal" style="transition-delay:.08s" data-i18n="demoSub">A one-minute walkthrough of how YUSR fixes an Arabic document.</p>
+  <div class="slot video-frame reveal" style="transition-delay:.16s" data-label="media\IMG_3728.MOV">
     <video controls preload="metadata" playsinline src="media\document_5911073557164596696.mp4"  poster="images\Screenshot 2026-10-03 233752-Picsart-AiImageEnhancer.png"></video>
     <div class="video-ph">
       <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>
@@ -319,7 +330,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 <!-- ================= CONNECT / CTA ================= -->
 <section class="connect" id="contact">
   <figure class="slot empty connect-bg" data-label="images\image 5.png"><img src="images\image 5.png" alt=""></figure>
-  <div class="connect-frame" id="connectFrame">
+  <div class="connect-frame reveal" id="connectFrame">
     <h2 data-i18n="connTitle">Connect with us</h2>
     <p data-i18n="connSub">Schedule a quick call to see how YUSR can transform your organization's digital accessibility workflow, no technical expertise required.</p>
 
@@ -364,7 +375,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
     <path d="M530 560C640 600 760 620 1200 690"/>
   </svg>
   <div class="wrap">
-    <div class="pricing-head">
+    <div class="pricing-head reveal">
       <h2 data-i18n="priceTitle">The Right Plan for Your Organization</h2>
       <p data-i18n="priceSub">Flexible pricing built for institutions of all sizes, from universities remediating course materials to government agencies managing high-volume content.</p>
       <div class="billing">
@@ -376,7 +387,7 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
       <p class="launch-note" data-i18n="launchNote">Launch pricing. Plans open when YUSR goes live.</p>
     </div>
 
-    <div class="plans">
+    <div class="plans reveal-stagger">
       <article class="plan">
         <h3 data-i18n="pStarter">Starter</h3>
         <ul>
@@ -432,11 +443,11 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
 <footer class="site-footer">
   <div class="arc" aria-hidden="true"></div>
   <div class="wrap">
-    <div class="foot-logo">
+    <div class="foot-logo reveal">
       <figure class="slot empty" data-label="images\Picture1.png"><img src="images\Picture1.png" alt="YUSR يسر"></figure>
       <span class="wordmark">YUSR <span>يسر</span></span>
     </div>
-    <div class="foot-cols">
+    <div class="foot-cols reveal">
       <div>
         <h4 data-i18n="contactH">Contact</h4>
         <ul class="contact-list">
@@ -623,6 +634,22 @@ heroSub:"يسر منصة إتاحة رقمية بالذكاء الاصطناعي
     var vslot = vid.closest(".slot");
     if (vid.readyState >= 1) vslot.classList.remove("empty");
     vid.addEventListener("loadedmetadata", function(){ vslot.classList.remove("empty"); });
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  var revealTargets = document.querySelectorAll(".reveal, .reveal-stagger");
+  if ("IntersectionObserver" in window && revealTargets.length) {
+    var revealObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    revealTargets.forEach(function(el){ revealObserver.observe(el); });
+  } else {
+    revealTargets.forEach(function(el){ el.classList.add("is-visible"); });
   }
 
   apply();
