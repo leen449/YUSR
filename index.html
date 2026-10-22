@@ -642,14 +642,19 @@ heroSub:"يسر منصة إتاحة رقمية بالذكاء الاصطناعي
     var revealObserver = new IntersectionObserver(function(entries, obs){
       entries.forEach(function(entry){
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          obs.unobserve(entry.target);
+          var el = entry.target;
+          el.classList.add("is-visible");
+          obs.unobserve(el);
+          // Once the reveal transition finishes, drop the reveal classes so
+          // their transform/opacity rules stop outranking things like
+          // .plan:hover (which also animates transform) by specificity.
+          setTimeout(function(){ el.classList.remove("reveal", "reveal-stagger", "is-visible"); }, 1100);
         }
       });
     }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
     revealTargets.forEach(function(el){ revealObserver.observe(el); });
   } else {
-    revealTargets.forEach(function(el){ el.classList.add("is-visible"); });
+    revealTargets.forEach(function(el){ el.classList.remove("reveal", "reveal-stagger"); });
   }
 
   apply();
