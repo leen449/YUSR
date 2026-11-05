@@ -179,10 +179,13 @@ html[lang="ar"] .features h2{ line-height:1.45; }
 .price{ margin-top:auto; display:flex; align-items:baseline; gap:.35rem; flex-wrap:wrap; }
 .price strong{ font:700 1.5rem/1 var(--sans); color:var(--check); }
 .price span{ color:var(--ink-muted); font-size:.92rem; }
+.price-wrap{ margin-top:auto; display:flex; flex-direction:column; gap:.15rem; }
+.price-wrap .price{ margin-top:0; }
+.price-note{ color:var(--ink-muted); font-size:.78rem; }
 .plan{ transition:background-color .25s ease, transform .25s ease; }
 .plan:hover, .plan:has(:focus-visible){ background:var(--enterprise); transform:translateY(-14px); }
-.plan:hover h3, .plan:hover li, .plan:hover .price strong, .plan:hover .price span,
-.plan:has(:focus-visible) h3, .plan:has(:focus-visible) li, .plan:has(:focus-visible) .price strong, .plan:has(:focus-visible) .price span{ color:#fff; opacity:1; }
+.plan:hover h3, .plan:hover li, .plan:hover .price strong, .plan:hover .price span, .plan:hover .price-note,
+.plan:has(:focus-visible) h3, .plan:has(:focus-visible) li, .plan:has(:focus-visible) .price strong, .plan:has(:focus-visible) .price span, .plan:has(:focus-visible) .price-note{ color:#fff; opacity:1; }
 .plan:hover .btn-soft, .plan:has(:focus-visible) .btn-soft{ background:var(--olive-deep); color:var(--on-olive); }
 @media (max-width: 1060px){ .plans{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width: 580px){ .plans{ grid-template-columns:1fr; } .plan{ min-height:auto; } }
@@ -420,7 +423,10 @@ form.cta .btn-primary{ align-self:center; padding:.95rem 2rem; font-size:1rem; m
           <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tRtl">RTL reading order fix</span></li>
           <li><svg viewBox="0 0 12 12"><path d="M1.5 6.5 4.5 9.5 10.5 2.5" stroke="currentColor" stroke-width="1.8" fill="none"/></svg><span data-i18n="tWcag">WCAG compliance report</span></li>
         </ul>
-        <p class="price"><span data-i18n="custom">Custom pricing</span></p>
+        <div class="price-wrap">
+          <p class="price"><span data-i18n="custom">Custom pricing</span></p>
+          <p class="price-note" data-i18n="annualContract">Annual contract</p>
+        </div>
 <a class="btn btn-soft" href="#contact" data-intent="demo" data-i18n="ctaDemo">Request a demo</a>      </article>
 
       <article class="plan">
@@ -486,7 +492,7 @@ heroSub:"YUSR is the Arabic-first AI accessibility platform. Where other tools a
       pStarter:"Starter", pPro:"Professional", pEnt:"Enterprise", pPpd:"Pay-Per-Document",
       docs50:"Up to 50 documents/month", docs500:"Up to 500 documents/month", docsUnl:"Unlimited documents", noCommit:"No monthly commitment",
       tAlt:"Arabic alt-text generation", tRtl:"RTL reading order fix", tWcag:"WCAG compliance report",
-      custom:"Custom pricing", perDoc:"/document", perMonth:"/month", perYear:"/year", sar:"SAR",
+      custom:"From SAR 18,000 / year", annualContract:"Annual contract", perDoc:"/document", perMonth:"/month", perYear:"/year", sar:"SAR",
       connTitle:"Connect with us",
       connSub:"Schedule a quick call to see how YUSR can transform your organization's digital accessibility workflow, no technical expertise required.",
       intentLegend:"What would you like to do?", intentWait:"Join the waitlist",
@@ -518,7 +524,7 @@ heroSub:"يسر منصة إتاحة رقمية بالذكاء الاصطناعي
       pStarter:"الأساسية", pPro:"الاحترافية", pEnt:"المؤسسات", pPpd:"الدفع لكل مستند",
       docs50:"حتى 50 مستندًا شهريًا", docs500:"حتى 500 مستند شهريًا", docsUnl:"مستندات غير محدودة", noCommit:"بدون التزام شهري",
       tAlt:"توليد النص البديل بالعربية", tRtl:"تصحيح ترتيب القراءة", tWcag:"تقرير الامتثال لـ WCAG",
-      custom:"تسعير مخصص", perDoc:"/ للمستند", perMonth:"/ شهريًا", perYear:"/ سنويًا", sar:"ر.س",
+      custom:"ابتداءً من 18,000 ريال سنوياً", annualContract:"عقد سنوي", perDoc:"/ للمستند", perMonth:"/ شهريًا", perYear:"/ سنويًا", sar:"ر.س",
       connTitle:"تواصل معنا",
       connSub:"احجز مكالمة قصيرة لترى كيف يمكن ليسر أن يطوّر سير عمل الإتاحة الرقمية في مؤسستك، دون الحاجة إلى خبرة تقنية.",
       intentLegend:"ماذا تريد أن تفعل؟", intentWait:"الانضمام لقائمة الانتظار",
